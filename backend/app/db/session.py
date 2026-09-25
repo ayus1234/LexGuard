@@ -7,11 +7,13 @@ import sys
 import asyncio
 
 if sys.platform == "win32":
-    try:
-        if not isinstance(asyncio.get_event_loop_policy(), asyncio.WindowsSelectorEventLoopPolicy):
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    except Exception:
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    set_policy = getattr(asyncio, "set_event_loop_policy", None)
+    selector_policy = getattr(asyncio, "WindowsSelectorEventLoopPolicy", None)
+    if callable(set_policy) and selector_policy is not None:
+        try:
+            set_policy(selector_policy())
+        except Exception:
+            pass
 
 from typing import AsyncGenerator, Dict, Any, Optional
 from sqlalchemy.ext.asyncio import (
