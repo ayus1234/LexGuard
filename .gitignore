@@ -8,6 +8,7 @@ backend/.venv/
 out/
 build/
 dist/
+tsconfig.tsbuildinfo
 
 # Environment files and credentials
 .env

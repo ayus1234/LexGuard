@@ -29,6 +29,7 @@ import {
 
 export default function DocumentAnalysisPage() {
   const data = mockDocumentAnalysis;
+  const [userContext, setUserContext] = useState<'founder' | 'procurement' | 'counsel'>('founder');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'high' | 'financial' | 'ip'>('all');
   const [activeClauseModal, setActiveClauseModal] = useState<Clause | null>(null);
   const [counterProposalCopied, setCounterProposalCopied] = useState(false);
@@ -112,6 +113,98 @@ export default function DocumentAnalysisPage() {
             <span className="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
             Synchronized
           </span>
+        </div>
+      </div>
+
+      {/* 1.5 Dynamic Assistant Persona & User Context Switcher */}
+      <div className="bg-white border border-[#CBD5E1] rounded-xl p-3 sm:p-4 shadow-2xs space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A]">
+              <Sparkles className="w-4 h-4 text-[#0284C7]" />
+              <span>Smart Context-Adaptive Assistant Logic</span>
+              <span className="text-[10px] font-mono bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE] px-2 py-0.5 rounded-full font-semibold">
+                Dynamic Decision Engine Active
+              </span>
+            </div>
+            <p className="text-[11px] text-[#64748B]">
+              The assistant dynamically adjusts risk thresholds, plain-language translation, and negotiation tactics based on your active role.
+            </p>
+          </div>
+
+          {/* Persona Tabs */}
+          <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-lg border border-[#E2E8F0]" role="tablist" aria-label="Assistant Persona Selection">
+            <button
+              onClick={() => setUserContext('founder')}
+              role="tab"
+              aria-selected={userContext === 'founder'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'founder'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              🚀 Founder / Non-Lawyer
+            </button>
+            <button
+              onClick={() => setUserContext('procurement')}
+              role="tab"
+              aria-selected={userContext === 'procurement'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'procurement'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              💼 Procurement Director
+            </button>
+            <button
+              onClick={() => setUserContext('counsel')}
+              role="tab"
+              aria-selected={userContext === 'counsel'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'counsel'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              ⚖️ In-House Legal Counsel
+            </button>
+          </div>
+        </div>
+
+        {/* Dynamic Contextual Guidance Banner */}
+        <div className="p-3 rounded-lg border text-xs leading-relaxed transition-all">
+          {userContext === 'founder' && (
+            <div className="bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] p-2.5 rounded space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-xs">
+                <span>🚀 Founder Decision Posture: Plain-English &amp; Cashflow Protection</span>
+              </div>
+              <p className="text-[11px] text-[#B45309]">
+                The assistant translated 48 clauses into plain business terms. <strong>Key Action:</strong> Watch out for the automatic 12-month renewal lock-in in Section 4.2 and unilateral termination penalties. Consider proposing a 30-day mutual out clause before signing.
+              </p>
+            </div>
+          )}
+          {userContext === 'procurement' && (
+            <div className="bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E40AF] p-2.5 rounded space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-xs">
+                <span>💼 Procurement Decision Posture: Commercial Balance &amp; SLA Enforcement</span>
+              </div>
+              <p className="text-[11px] text-[#1D4ED8]">
+                Vendor Tilt is measured at <strong>68% vendor-favored</strong>. Vendor liability is capped at 1x monthly subscription fees ($5,000) while customer indemnity is uncapped. <strong>Key Action:</strong> Demand mutual liability caps tied to 12-month spend ($60,000) and add financial credits for downtime below 99.9%.
+              </p>
+            </div>
+          )}
+          {userContext === 'counsel' && (
+            <div className="bg-[#F8FAFC] border border-[#CBD5E1] text-[#334155] p-2.5 rounded space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-xs">
+                <span>⚖️ Legal Counsel Decision Posture: Statutory Benchmarking &amp; Redline Precision</span>
+              </div>
+              <p className="text-[11px] text-[#475569]">
+                Benchmarked against Delaware General Corporation Law and UCC Article 2. <strong>Key Action:</strong> Review unilateral consequential damages carveout in Section 8.3 and non-solicitation restrictions in Section 11.4. Redline packet ready for outside counsel debrief.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

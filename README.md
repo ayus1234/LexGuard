@@ -8,7 +8,9 @@
 [![Live Demo](https://img.shields.io/badge/Vercel-Live%20Production%20App-black?logo=vercel&logoColor=white)](https://lex-guard-bay.vercel.app)
 [![API Service](https://img.shields.io/badge/Render-FastAPI%20Backend-46E3B7?logo=render&logoColor=white)](https://lexguard-backend-7yxz.onrender.com/docs)
 [![Database](https://img.shields.io/badge/PostgreSQL-pgvector-blueviolet.svg)]()
-[![Backend Tests](https://img.shields.io/badge/Pytest-124%20passed%20%2F%200%20failed-brightgreen.svg)]()
+[![Backend Tests](https://img.shields.io/badge/Pytest-129%20passed%20%2F%200%20failed-brightgreen.svg)]()
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-Level%20AA%20Compliant-blue.svg)](ACCESSIBILITY.md)
+[![Design System](https://img.shields.io/badge/Design-Stitch%20System%20%2B%20DESIGN.md-purple.svg)](DESIGN.md)
 [![Type Checking](https://img.shields.io/badge/Pyright-0%20errors%20%7C%20Strict-blue.svg)]()
 [![Next.js Build](https://img.shields.io/badge/Next.js%2014-Production%20Verified-success.svg)]()
 [![AI Engine](https://img.shields.io/badge/Google%20Gemini-1.5%20Flash%20%2B%20Dual--Key%20Failover-orange.svg)]()
@@ -636,11 +638,11 @@ LexGuard is engineered to achieve top-tier evaluation across every rubric criter
 
 | Evaluation Dimension | Weight / Target | Implementation Details in LexGuard | Verification Command |
 | :--- | :--- | :--- | :--- |
-| **Problem Statement Alignment** | **High Impact** | Dedicated to **Legal Tech / Contract Intelligence & Compliance**. Built specifically around the **Lead Legal Counsel** persona with context-aware risk rules, Vendor Tilt scoring, anti-hallucination citations (§), and attorney briefing packets. | Review Sections 1, 2, 3, and 4 |
+| **Problem Statement Alignment** | **High Impact** | Dedicated to **Legal Tech / Contract Intelligence & Compliance**. Built around **3 dynamic user personas** (Founder/Non-Lawyer, Procurement Director, In-House Legal Counsel) with a **Smart Context-Adaptive Persona Switcher** on `/analyze` and `/ask` that dynamically adjusts risk thresholds, plain-language translation, suggested interrogations, and negotiation tactics based on active user role. Includes Vendor Tilt scoring, anti-hallucination citations (§), and attorney briefing packets. | Review Sections 1, 2, 3 and `/analyze`, `/ask` persona tabs |
 | **Security & Privacy** | **High Impact** | Zero-retention ephemeral file shredding (`os.unlink`), SQL-level tenant isolation preventing vector leakage, masked credentials, and dual-key API key failover. | Review Section 8 & `test_cleanup.py` |
-| **Testing & Reliability** | **High Impact** | 124 passing automated tests covering file upload, RAG vector retrieval, analysis extraction, PDF/DOCX exporters, and failover circuits. | `pytest -q tests` (124 passed) |
+| **Testing & Reliability** | **High Impact** | **129 passing** automated tests (incl. 5 dedicated WCAG accessibility tests) covering file upload, RAG vector retrieval, analysis extraction, PDF/DOCX exporters, failover circuits, and accessibility compliance. | `pytest -q tests` (129 passed) |
 | **Code Quality & Architecture** | **Medium Impact** | Decoupled Next.js 14 App Router and FastAPI architecture, strict Pydantic v2 schemas, zero Pyright typing errors, and full compliance with Clean Code standards. | `npx pyright --project backend` (0 errors) |
-| **Accessibility & UX** | **Medium Impact** | Google Stitch Design System, WCAG 2.1 AA compliant color contrast, ARIA labels, semantic HTML5, responsive layouts, and ⌘K Command Palette keyboard navigation. | Audited on live Vercel deployment |
+| **Accessibility & UX** | **Medium Impact** | Google Stitch Design System ([`DESIGN.md`](DESIGN.md)), WCAG 2.1 Level AA compliance specification ([`ACCESSIBILITY.md`](ACCESSIBILITY.md)), skip navigation link (`#main-content`), `aria-label` on all interactive controls, `role="tablist"`/`role="tab"` on persona switchers, semantic HTML5 landmarks, focus ring tokens, responsive layouts, and ⌘K Command Palette keyboard navigation. 5 automated accessibility tests in `test_accessibility.py`. | `pytest tests/test_accessibility.py` (5 passed) |
 | **Efficiency & Performance** | **Medium Impact** | In-memory stream processing, 3,072-dimensional vector similarity using pgvector cosine indexing (`<=>`), database connection pooling (psycopg 3), and Next.js static prerendering. | Fast cold-start & ~10s full test suite |
 
 ---

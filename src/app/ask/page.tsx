@@ -114,7 +114,29 @@ IN NO EVENT SHALL EITHER PARTY'S AGGREGATE LIABILITY ARISING OUT OF OR RELATED T
   },
 };
 
+const PERSONA_QUESTIONS = {
+  founder: [
+    { id: 'f1', category: 'Renewal Trap', question: 'What is the exact deadline to prevent automatic 12-month lock-in?' },
+    { id: 'f2', category: 'Cashflow Risk', question: 'What happens if our company needs to terminate early due to runway constraints?' },
+    { id: 'f3', category: 'Personal Liability', question: 'Are founders or individual officers exposed to personal indemnity?' },
+    { id: 'f4', category: 'Data Control', question: 'Can the vendor withhold or lock access to our customer records?' },
+  ],
+  procurement: [
+    { id: 'p1', category: 'Liability Ratio', question: 'What is the aggregate liability cap relative to our annual contract value ($240k)?' },
+    { id: 'p2', category: 'SLA Remedies', question: 'What financial service credits do we receive if monthly uptime drops below 99.9%?' },
+    { id: 'p3', category: 'Price Protection', question: 'Are price increases capped upon renewal or can the vendor increase fees unilaterally?' },
+    { id: 'p4', category: 'Invoice Dispute', question: 'Can we withhold disputed fees without service suspension or late penalty interest?' },
+  ],
+  counsel: [
+    { id: 'c1', category: 'Risk Allocation', question: 'Does the consequential damages waiver mutualize or exclude third-party IP indemnification?' },
+    { id: 'c2', category: 'Delaware Law', question: 'How does Delaware governing law interact with Section 8.3 aggregate damages ceiling?' },
+    { id: 'c3', category: 'Breach Notice', question: 'What are the exact cure periods and notice requirements under Section 9.1 for material breach?' },
+    { id: 'c4', category: 'AI & Data IP', question: 'Does Section 12.1 adequately prohibit training proprietary ML/LLM models on customer data?' },
+  ],
+};
+
 export default function DocumentQAPage() {
+  const [userContext, setUserContext] = useState<'founder' | 'procurement' | 'counsel'>('counsel');
   const [turns, setTurns] = useState<QATurn[]>(initialQATurns);
   const [inputText, setInputText] = useState('');
   const [citationDepth, setCitationDepth] = useState<'comprehensive' | 'executive'>('comprehensive');
@@ -144,10 +166,16 @@ export default function DocumentQAPage() {
     const questionText = inputText.trim();
     if (!questionText || isLoading) return;
 
+    const roleName = userContext === 'founder'
+      ? 'Founder / Non-Lawyer'
+      : userContext === 'procurement'
+      ? 'Procurement Director'
+      : 'Lead Legal Counsel';
+
     const newQuery: QATurn = {
       id: `turn-${Date.now()}-user`,
       speaker: 'user',
-      authorName: 'Lead Legal Counsel',
+      authorName: roleName,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
       query: questionText,
     };
@@ -337,35 +365,128 @@ export default function DocumentQAPage() {
         </p>
       </div>
 
-      {/* 3. Corpus Suggested Interrogations */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B]">
-          <span className="uppercase font-bold tracking-wider">Corpus Suggested Interrogations</span>
-          <span>4 extracted hotspots</span>
+      {/* 3. Smart Context-Adaptive Assistant Persona & Corpus Interrogations */}
+      <div className="space-y-3 bg-white border border-[#CBD5E1] rounded-xl p-3 sm:p-4 shadow-2xs">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A]">
+              <Sparkles className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
+              <span>Smart Context-Adaptive Assistant Logic</span>
+              <span className="text-[10px] font-mono bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE] px-2 py-0.5 rounded-full font-semibold">
+                Dynamic Q&amp;A Lens Active
+              </span>
+            </div>
+            <p className="text-[11px] text-[#64748B]">
+              Select your persona lens to query the document through role-specific risk frameworks and interrogation playbooks.
+            </p>
+          </div>
+
+          {/* Persona Selection Tabs */}
+          <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-lg border border-[#E2E8F0]" role="tablist" aria-label="Assistant Persona Selection">
+            <button
+              onClick={() => {
+                setUserContext('founder');
+                setActiveSuggested('f1');
+                setInputText(PERSONA_QUESTIONS.founder[0].question);
+              }}
+              role="tab"
+              aria-selected={userContext === 'founder'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'founder'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              🚀 Founder / Non-Lawyer
+            </button>
+            <button
+              onClick={() => {
+                setUserContext('procurement');
+                setActiveSuggested('p1');
+                setInputText(PERSONA_QUESTIONS.procurement[0].question);
+              }}
+              role="tab"
+              aria-selected={userContext === 'procurement'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'procurement'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              💼 Procurement Director
+            </button>
+            <button
+              onClick={() => {
+                setUserContext('counsel');
+                setActiveSuggested('c1');
+                setInputText(PERSONA_QUESTIONS.counsel[0].question);
+              }}
+              role="tab"
+              aria-selected={userContext === 'counsel'}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                userContext === 'counsel'
+                  ? 'bg-white text-[#0F172A] shadow-xs font-bold'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+            >
+              ⚖️ In-House Legal Counsel
+            </button>
+          </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          {suggestedInterrogations.map((item) => {
-            const isSelected = activeSuggested === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleSuggestedClick(item.id, item.question)}
-                className={`p-3 rounded-lg border text-left transition-all ${
-                  isSelected
-                    ? 'border-[#0284C7] bg-[#EFF6FF] shadow-2xs'
-                    : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8] hover:bg-[#F8FAFC]'
-                }`}
-              >
-                <div className="text-[10px] font-mono font-bold uppercase text-[#0284C7]">
-                  {item.category}
-                </div>
-                <div className="text-xs font-semibold text-[#0F172A] mt-1 leading-snug">
-                  {item.question}
-                </div>
-              </button>
-            );
-          })}
+        {/* Dynamic Context Guidance Banner */}
+        <div className="p-2.5 rounded border text-xs leading-relaxed">
+          {userContext === 'founder' && (
+            <div className="bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] p-2 rounded flex items-center justify-between">
+              <span><strong>🚀 Founder Lens:</strong> Focusing on personal liability risk, hidden auto-renewals, and non-refundable runway commitments.</span>
+              <span className="text-[10px] font-mono text-[#B45309]">Plain-English Synthesis</span>
+            </div>
+          )}
+          {userContext === 'procurement' && (
+            <div className="bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E40AF] p-2 rounded flex items-center justify-between">
+              <span><strong>💼 Procurement Lens:</strong> Focusing on liability caps ($5k vs $240k spend), financial SLA uptime credits, and price escalators.</span>
+              <span className="text-[10px] font-mono text-[#1D4ED8]">Vendor Tilt: 68%</span>
+            </div>
+          )}
+          {userContext === 'counsel' && (
+            <div className="bg-[#F8FAFC] border border-[#CBD5E1] text-[#334155] p-2 rounded flex items-center justify-between">
+              <span><strong>⚖️ Legal Counsel Lens:</strong> Focusing on Delaware governing law, mutual consequential damages carve-outs, and AI training covenants.</span>
+              <span className="text-[10px] font-mono text-[#475569]">Delaware UCC Grounded</span>
+            </div>
+          )}
+        </div>
+
+        {/* Dynamic Role-Specific Suggested Interrogations */}
+        <div className="space-y-1.5 pt-1">
+          <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B]">
+            <span className="uppercase font-bold tracking-wider">Suggested Interrogations ({userContext.toUpperCase()} Lens)</span>
+            <span>4 contextual hotspots</span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            {PERSONA_QUESTIONS[userContext].map((item) => {
+              const isSelected = activeSuggested === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleSuggestedClick(item.id, item.question)}
+                  aria-label={`Select suggested question: ${item.question}`}
+                  className={`p-3 rounded-lg border text-left transition-all ${
+                    isSelected
+                      ? 'border-[#0284C7] bg-[#EFF6FF] shadow-2xs ring-1 ring-[#0284C7]'
+                      : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8] hover:bg-[#F8FAFC]'
+                  }`}
+                >
+                  <div className="text-[10px] font-mono font-bold uppercase text-[#0284C7]">
+                    {item.category}
+                  </div>
+                  <div className="text-xs font-semibold text-[#0F172A] mt-1 leading-snug">
+                    {item.question}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -636,7 +757,7 @@ export default function DocumentQAPage() {
 
               {/* Text Input */}
               <div className="relative">
-                <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" aria-hidden="true" />
                 <input
                   type="text"
                   value={inputText}
@@ -644,16 +765,18 @@ export default function DocumentQAPage() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleExecuteQuery();
                   }}
+                  aria-label="Ask a contract question grounded strictly in document text"
                   placeholder="Ask any question grounded strictly in the text of this contract..."
-                  className="w-full pl-10 pr-24 py-3 bg-white border border-[#CBD5E1] rounded-lg text-xs font-sans text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#0284C7] shadow-2xs"
+                  className="w-full pl-10 pr-24 py-3 bg-white border border-[#CBD5E1] rounded-lg text-xs font-sans text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1 focus:border-[#0284C7] shadow-2xs"
                 />
                 <button
                   onClick={handleExecuteQuery}
                   disabled={!inputText.trim() || isLoading}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-semibold bg-[#0F172A] hover:bg-[#1E293B] text-white rounded flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                  aria-label="Execute document interrogation query"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-semibold bg-[#0F172A] hover:bg-[#1E293B] text-white rounded flex items-center gap-1.5 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
                 >
                   <span>{isLoading ? 'Querying...' : 'Execute'}</span>
-                  <ArrowUp className="w-3.5 h-3.5" />
+                  <ArrowUp className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
               </div>
 
