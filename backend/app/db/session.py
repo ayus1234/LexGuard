@@ -97,12 +97,13 @@ async def check_database_health() -> Dict[str, Any]:
                 "status": "healthy" if has_vector else "degraded",
             }
     except Exception as e:
-        logger.warning(f"Database health check failed: {type(e).__name__}")
+        logger.warning(f"Database health check failed: {type(e).__name__}: {e}")
         return {
             "connected": False,
             "vector_extension": False,
             "status": "unavailable",
             "error_type": type(e).__name__,
+            "error_detail": str(e),
         }
 
 
