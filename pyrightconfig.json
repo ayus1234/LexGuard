@@ -1,0 +1,31 @@
+{
+  "venvPath": "backend",
+  "venv": ".venv",
+  "include": [
+    "backend/app",
+    "backend/tests"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/.venv",
+    "backend/.venv"
+  ],
+  "extraPaths": [
+    ".",
+    "backend",
+    "backend/app",
+    "backend/.venv/Lib/site-packages"
+  ],
+  "reportPrivateImportUsage": "none",
+  "executionEnvironments": [
+    {
+      "root": "backend",
+      "extraPaths": [
+        ".",
+        "..",
+        "app",
+        ".venv/Lib/site-packages"
+      ]
+    }
+  ]
+}

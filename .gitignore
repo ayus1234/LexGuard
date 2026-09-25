@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+backend/.venv/
+.venv/
+
+# Next.js build
+.next/
+out/
+build/
+dist/
+
+# Environment files and credentials
+.env
+.env*.local
+backend/.env
+backend/.env.local
+*.pem
+*.key
+
+# Ephemeral storage
+tmp_uploads/
+backend/tmp_uploads/
+chroma_db/
+backend/chroma_db/
+*.tmp
+
+# Python artifacts
+__pycache__/
+backend/**/__pycache__/
+*.py[cod]
+.pytest_cache/
+backend/.pytest_cache/
+.coverage
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

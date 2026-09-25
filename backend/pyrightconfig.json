@@ -1,0 +1,16 @@
+{
+  "include": [
+    "app",
+    "tests"
+  ],
+  "exclude": [
+    ".venv"
+  ],
+  "venv": ".venv",
+  "extraPaths": [
+    ".",
+    "..",
+    "app",
+    ".venv/Lib/site-packages"
+  ]
+}
