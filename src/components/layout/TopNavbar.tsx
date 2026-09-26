@@ -67,74 +67,75 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header className="bg-white border-b border-[#E2E8F0] sticky top-0 z-40">
-      <div className="max-w-[1680px] mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-2 xl:gap-3">
-        {/* Left: Mobile Toggle & Brand Logo */}
-        <div className="flex items-center gap-2 shrink-0">
-          {onToggleSidebar && (
-            <button
-              onClick={onToggleSidebar}
-              className="lg:hidden p-1.5 rounded hover:bg-[#F1F5F9] text-[#64748B] focus:outline-none"
-              aria-label="Toggle Sidebar"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          )}
-
-          <BrandLogo showTag size="sm" />
-        </div>
-
-        {/* Center: Main Navigation Tabs */}
-        <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-0.5 shrink-0">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-2 xl:px-2.5 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#0F172A] text-white shadow-sm font-semibold'
-                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
-                }`}
+      <div className="max-w-[1680px] mx-auto px-4 sm:px-6">
+        <div className="h-14 flex items-center gap-2">
+          {/* Left: Brand Logo */}
+          <div className="flex items-center gap-3 shrink-0">
+            {onToggleSidebar && (
+              <button
+                onClick={onToggleSidebar}
+                className="lg:hidden p-1.5 rounded hover:bg-[#F1F5F9] text-[#64748B] focus:outline-none"
+                aria-label="Toggle Sidebar"
               >
-                <span>{item.label}</span>
-                {item.badge && (
-                  <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full leading-tight ${
-                      isActive
-                        ? 'bg-[#1E293B] text-sky-200 border border-slate-700'
-                        : 'bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]'
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+                <Menu className="w-5 h-5" />
+              </button>
+            )}
 
-        {/* Right: Search, Actions, Profile */}
-        <div className="flex items-center gap-2 shrink min-w-0">
-          {/* Quick Search Trigger - Protected minimum width */}
-          <button
-            onClick={onOpenCommandPalette}
-            className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-2.5 py-1 text-xs text-[#64748B] transition-colors min-w-[220px] w-[240px] xl:w-[280px] justify-between shrink"
-            aria-label="Search corpus"
-          >
-            <span className="flex items-center gap-1.5 truncate min-w-0">
-              <Search className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" aria-hidden="true" />
-              <span className="truncate">Search corpus, statutes...</span>
-            </span>
-            <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs shrink-0">
-              ⌘K
-            </kbd>
-          </button>
+            <BrandLogo showTag size="sm" />
+          </div>
 
-          {/* Status & Session Indicators */}
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#64748B] relative shrink-0">
-            {/* 1. Notification / Verifications Counter Control */}
-            <div className="relative" ref={verificationsRef}>
+          {/* Center: Main Navigation */}
+          <nav aria-label="Main Navigation" className="hidden lg:flex items-center gap-1 shrink-0">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-2.5 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                    isActive
+                      ? 'bg-[#0F172A] text-white shadow-sm font-semibold'
+                      : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full leading-tight ${
+                        isActive
+                          ? 'bg-[#1E293B] text-sky-200 border border-slate-700'
+                          : 'bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Right: Search, Actions, Profile */}
+          <div className="flex items-center gap-2 ml-auto shrink-0">
+            {/* Quick Search */}
+            <button
+              onClick={onOpenCommandPalette}
+              className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-2.5 py-1 text-xs text-[#64748B] transition-colors w-44 lg:w-48 justify-between shrink-0"
+              aria-label="Search corpus"
+            >
+              <span className="flex items-center gap-1.5 truncate min-w-0">
+                <Search className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" aria-hidden="true" />
+                <span className="truncate">Search corpus, statutes...</span>
+              </span>
+              <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs shrink-0">
+                ⌘K
+              </kbd>
+            </button>
+
+            {/* Status & Session Indicators */}
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#64748B] relative shrink-0">
+              {/* 1. Notification / Verifications Counter Control */}
+              <div className="relative" ref={verificationsRef}>
               <button
                 onClick={() => {
                   setIsVerificationsOpen(!isVerificationsOpen);
@@ -319,29 +320,29 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             </div>
           </div>
 
-          <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block" />
+            <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block" />
 
-          {/* 3. User Profile / Active Session Control */}
-          <div className="relative pl-1 shrink-0" ref={profileRef}>
-            <button
-              onClick={() => {
-                setIsProfileOpen(!isProfileOpen);
-                setIsVerificationsOpen(false);
-                setIsSecurityOpen(false);
-              }}
-              aria-expanded={isProfileOpen}
-              aria-label="Counsel Profile and Active Session Settings"
-              className="flex items-center gap-2.5 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
-            >
-              <div className="text-right hidden sm:block min-w-0 max-w-[140px] shrink-0">
-                <div className="text-xs font-semibold text-[#0F172A] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
-                  Lead Legal Counsel
+            {/* 3. User Profile / Active Session Control */}
+            <div className="relative shrink-0" ref={profileRef}>
+              <button
+                onClick={() => {
+                  setIsProfileOpen(!isProfileOpen);
+                  setIsVerificationsOpen(false);
+                  setIsSecurityOpen(false);
+                }}
+                aria-expanded={isProfileOpen}
+                aria-label="Counsel Profile and Active Session Settings"
+                className="flex items-center gap-2 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
+              >
+                <div className="text-right hidden sm:block shrink-0">
+                  <div className="text-xs font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
+                    Lead Legal Counsel
+                  </div>
+                  <div className="text-[10px] font-mono text-[#059669] flex items-center justify-end gap-1 whitespace-nowrap">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse"></span>
+                    <span>Pro Tier / Active Session</span>
+                  </div>
                 </div>
-                <div className="text-[10px] font-mono text-[#059669] flex items-center justify-end gap-1 whitespace-nowrap">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse"></span>
-                  <span className="overflow-hidden text-ellipsis">Pro Tier / Active</span>
-                </div>
-              </div>
 
               {/* Avatar */}
               <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 overflow-hidden flex items-center justify-center shrink-0">
@@ -358,9 +359,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   }}
                 />
               </div>
-            </button>
+                </button>
 
-            {isProfileOpen && (
+                {isProfileOpen && (
               <div
                 role="dialog"
                 aria-modal="true"
@@ -425,26 +426,27 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   >
                     Dismiss (Esc)
                   </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-1.5 rounded hover:bg-[#F1F5F9] text-[#64748B]"
-            aria-label="Navigation Menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-1.5 rounded hover:bg-[#F1F5F9] text-[#64748B]"
+              aria-label="Navigation Menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <nav aria-label="Mobile Navigation" className="xl:hidden border-t border-[#E2E8F0] bg-white px-4 py-3 space-y-1">
+        <nav aria-label="Mobile Navigation" className="lg:hidden border-t border-[#E2E8F0] bg-white px-4 py-3 space-y-1">
           <button
             onClick={() => {
               setMobileMenuOpen(false);
