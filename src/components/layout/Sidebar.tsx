@@ -44,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       badge: '285',
     },
     {
-      label: 'Demo Document Library',
+      label: 'Demo Docs',
       href: '/demo-docs',
       icon: Sparkles,
       badge: '15',
