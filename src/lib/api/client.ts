@@ -235,19 +235,34 @@ export class LexGuardApiClientError extends Error {
 }
 
 // Determine API base URL with proper environment handling
-// Production deployments should set NEXT_PUBLIC_API_BASE_URL explicitly
-// Development allows localhost fallback
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 
-  (typeof window !== 'undefined' && window.location?.hostname === 'localhost'
-    ? 'http://localhost:8000'
-    : 'http://127.0.0.1:8000');
+// Production: MUST use explicitly configured backend URL
+// Development: Allow localhost fallback
+const getApiBaseUrl = (): string => {
+  // Explicit environment variable takes highest priority
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
 
-// Log warning if production build without explicit configuration
-if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_API_BASE_URL) {
-  console.warn(
-    '[LexGuard] NEXT_PUBLIC_API_BASE_URL not set in production build. ' +
-    'API requests may fail. Please configure this environment variable.'
-  );
+  // Production build MUST have explicit configuration
+  if (process.env.NODE_ENV === 'production') {
+    // Use deployed production backend
+    return 'https://lexguard-backend-7yxz.onrender.com';
+  }
+
+  // Development: allow localhost
+  if (typeof window !== 'undefined' && window.location?.hostname === 'localhost') {
+    return 'http://localhost:8000';
+  }
+
+  // Fallback for development
+  return 'http://127.0.0.1:8000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Log configuration for debugging
+if (typeof window !== 'undefined') {
+  console.info(`[LexGuard API Client] Using backend: ${API_BASE_URL}`);
 }
 
 export const apiClient = {

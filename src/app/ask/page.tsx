@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import InformationalToast from '@/components/ui/InformationalToast';
 import {
   suggestedInterrogations,
@@ -30,6 +31,7 @@ import {
   AlertTriangle,
   ChevronRight,
   Loader2,
+  X,
 } from 'lucide-react';
 
 const PAGE_CONTENT_MAP: Record<number, { section: string; text: string }> = {
@@ -137,6 +139,7 @@ const PERSONA_QUESTIONS = {
 };
 
 export default function DocumentQAPage() {
+  const router = useRouter();
   const [userContext, setUserContext] = useState<'founder' | 'procurement' | 'counsel'>('counsel');
   const [turns, setTurns] = useState<QATurn[]>(initialQATurns);
   const [inputText, setInputText] = useState('');
@@ -153,6 +156,92 @@ export default function DocumentQAPage() {
   const [sessionId] = useState<string>(() => `session-${Date.now()}`);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [pinnedFindings, setPinnedFindings] = useState<Set<string>>(new Set());
+  const [showRedlineModal, setShowRedlineModal] = useState(false);
+
+  // Session storage for pinned findings
+  useEffect(() => {
+    const stored = sessionStorage.getItem('lexguard_pinned_findings');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setPinnedFindings(new Set(parsed));
+      } catch {
+        // Invalid data, ignore
+      }
+    }
+  }, []);
+
+  const handlePinFinding = (turnId: string, finding: string) => {
+    const newPinned = new Set(pinnedFindings);
+    newPinned.add(turnId);
+    setPinnedFindings(newPinned);
+    
+    // Store in sessionStorage for /brief page
+    const findingsData = {
+      turnId,
+      finding,
+      timestamp: new Date().toISOString(),
+      documentId: activeDocId,
+      documentTitle: activeDocTitle,
+    };
+    
+    const existing = sessionStorage.getItem('lexguard_pinned_findings_data');
+    let allFindings = [];
+    if (existing) {
+      try {
+        allFindings = JSON.parse(existing);
+      } catch {
+        allFindings = [];
+      }
+    }
+    allFindings.push(findingsData);
+    sessionStorage.setItem('lexguard_pinned_findings_data', JSON.stringify(allFindings));
+    sessionStorage.setItem('lexguard_pinned_findings', JSON.stringify([...newPinned]));
+    
+    setToastMessage('Finding pinned to Summary Brief. View at /brief');
+    setShowToast(true);
+  };
+
+  const handleExportMemo = async () => {
+    try {
+      setToastMessage('Generating Q&A Memo PDF...');
+      setShowToast(true);
+      
+      // Create a simple Q&A memo text
+      const memoContent = turns
+        .map((turn, idx) => {
+          if (turn.speaker === 'user') {
+            return `Q${Math.floor(idx / 2) + 1}: ${turn.query}`;
+          } else {
+            return `A: ${turn.groundedText}\n\nConfidence: ${turn.confidence} | Latency: ${turn.groundingLatency}\n${'='.repeat(80)}`;
+          }
+        })
+        .join('\n\n');
+      
+      // Create downloadable text file (PDF generation would require backend)
+      const blob = new Blob([`LexGuard Q&A Session Memo\n${'='.repeat(80)}\n\nDocument: ${activeDocTitle}\nSession: ${sessionId}\nGenerated: ${new Date().toLocaleString()}\n\n${'='.repeat(80)}\n\n${memoContent}`], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `LexGuard_QA_Memo_${activeDocId}_${Date.now()}.txt`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+      
+      setToastMessage('Q&A Memo exported successfully');
+    } catch (err) {
+      setToastMessage('Export failed. Please try again.');
+    }
+  };
+
+  const handleResetContext = () => {
+    setTurns(initialQATurns);
+    setInputText('');
+    setHighlightedQuote(null);
+    setActivePage(10);
+    setToastMessage('Q&A context reset');
+    setShowToast(true);
+  };
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedDocId = sessionStorage.getItem('lexguard_active_doc_id');
@@ -349,10 +438,7 @@ export default function DocumentQAPage() {
           </span>
 
           <button
-            onClick={() => {
-              setToastMessage('Q&A Analysis Memo Export: This feature would generate a comprehensive PDF memo containing all Q&A exchanges, grounded citations, risk assessments, and strategic recommendations. Perfect for sharing with legal counsel or team members.');
-              setShowToast(true);
-            }}
+            onClick={handleExportMemo}
             className="px-3 py-1 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded flex items-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
@@ -512,7 +598,7 @@ export default function DocumentQAPage() {
               </div>
 
               <button
-                onClick={() => setTurns(initialQATurns)}
+                onClick={handleResetContext}
                 className="text-[11px] font-mono text-[#64748B] hover:text-[#0F172A] flex items-center gap-1"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -694,14 +780,13 @@ export default function DocumentQAPage() {
                           )}
                         </button>
                         <button
-                          onClick={() => {
-                            setToastMessage('Pinned to Brief: This finding has been added to your Lawyer Summary Brief at /brief. It will appear in the prioritized consultation agenda with full citations and suggested discussion points for attorney review.');
-                            setShowToast(true);
-                          }}
-                          className="hover:text-[#0F172A] flex items-center gap-1"
+                          onClick={() => handlePinFinding(turn.id, turn.groundedText || '')}
+                          className={`hover:text-[#0F172A] flex items-center gap-1 ${
+                            pinnedFindings.has(turn.id) ? 'text-[#0284C7]' : ''
+                          }`}
                         >
-                          <Pin className="w-3 h-3" />
-                          <span>Pin to Summary Brief</span>
+                          <Pin className={`w-3 h-3 ${pinnedFindings.has(turn.id) ? 'fill-current' : ''}`} />
+                          <span>{pinnedFindings.has(turn.id) ? 'Pinned' : 'Pin to Summary Brief'}</span>
                         </button>
                       </div>
 
@@ -869,18 +954,17 @@ export default function DocumentQAPage() {
 
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
-                  onClick={() => {
-                    setToastMessage('Redline Inserted: The proposed 12-month mutual termination clause has been staged in the Comparison Desk (/compare) for side-by-side review against the existing provision. You can refine language before presenting to counterparty.');
-                    setShowToast(true);
-                  }}
+                  onClick={() => setShowRedlineModal(true)}
                   className="py-1 px-2 text-[10px] font-mono font-semibold bg-[#0F172A] text-white rounded hover:bg-[#1E293B] text-center"
                 >
                   Insert Proposed Redline
                 </button>
                 <button
                   onClick={() => {
-                    setToastMessage('Market Baseline Comparison: This would open a detailed benchmark analysis showing how this provision compares against 2,400 similar SaaS agreements in the LexGuard corpus. Includes percentile rankings, regional variations, and negotiation success rates.');
-                    setShowToast(true);
+                    // Navigate to compare page with context
+                    sessionStorage.setItem('compare_source_doc', activeDocId);
+                    sessionStorage.setItem('compare_source_title', activeDocTitle);
+                    router.push('/compare');
                   }}
                   className="py-1 px-2 text-[10px] font-mono font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] rounded hover:bg-[#F1F5F9] text-center"
                 >
@@ -917,6 +1001,80 @@ export default function DocumentQAPage() {
           </div>
         </div>
       </div>
+
+      {/* Redline Modal */}
+      {showRedlineModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowRedlineModal(false)}>
+          <div className="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="border-b border-[#E2E8F0] px-4 py-3 flex items-center justify-between bg-[#F8FAFC]">
+              <h3 className="text-sm font-display font-bold text-[#0F172A]">Proposed Redline Preview</h3>
+              <button onClick={() => setShowRedlineModal(false)} className="p-1 hover:bg-[#E2E8F0] rounded">
+                <X className="w-4 h-4 text-[#64748B]" />
+              </button>
+            </div>
+            <div className="p-4 space-y-4 overflow-y-auto max-h-[calc(80vh-8rem)]">
+              <div className="space-y-2">
+                <div className="text-xs font-mono font-bold text-[#64748B] uppercase">Original Provision (Current)</div>
+                <div className="p-3 bg-[#FEE2E2] border border-[#FCA5A5] rounded text-xs leading-relaxed">
+                  <p className="text-[#7F1D1D]">
+                    <span className="line-through">§ 9.2 Termination for Convenience. Either party may terminate this agreement or any Order Form for convenience without cause upon ninety (90) days prior written notice to the other party. In the event of customer termination for convenience, customer shall not be entitled to any refund of prepaid fees.</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="text-xs font-mono font-bold text-[#64748B] uppercase">Proposed Amendment (Suggested)</div>
+                <div className="p-3 bg-[#DCFCE7] border border-[#86EFAC] rounded text-xs leading-relaxed">
+                  <p className="text-[#14532D]">
+                    <span className="font-semibold">§ 9.2 Termination for Convenience (Amended).</span> Either party may terminate this agreement or any Order Form for convenience without cause upon <span className="bg-[#FEF08A] font-bold px-1">sixty (60) days</span> prior written notice (reduced from 90 days). In the event of customer termination for convenience <span className="bg-[#FEF08A] font-bold px-1">after the first twelve (12) months</span>, customer shall be entitled to a <span className="bg-[#FEF08A] font-bold px-1">pro-rata refund</span> of any prepaid fees for unused subscription periods.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded bg-[#EFF6FF] border border-[#BFDBFE] text-xs space-y-1">
+                <div className="font-semibold text-[#0F172A] flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Negotiation Strategy Note</span>
+                </div>
+                <p className="text-[#334155] leading-relaxed text-[11px]">
+                  This proposed redline improves customer flexibility by: (1) reducing termination notice from 90 to 60 days, (2) adding pro-rata refund protection after year 1, and (3) eliminating vendor-favorable non-refundable prepayment lock-in. Market standard for SaaS agreements in the $200k-$500k range.
+                </p>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText('§ 9.2 Termination for Convenience (Amended). Either party may terminate this agreement or any Order Form for convenience without cause upon sixty (60) days prior written notice (reduced from 90 days). In the event of customer termination for convenience after the first twelve (12) months, customer shall be entitled to a pro-rata refund of any prepaid fees for unused subscription periods.');
+                    setToastMessage('Proposed redline copied to clipboard');
+                    setShowToast(true);
+                  }}
+                  className="flex-1 py-2 px-3 text-xs font-semibold bg-[#0F172A] text-white rounded hover:bg-[#1E293B]"
+                >
+                  Copy Proposed Language
+                </button>
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem('compare_redline_original', '§ 9.2 Termination for Convenience. Either party may terminate this agreement or any Order Form for convenience without cause upon ninety (90) days prior written notice to the other party. In the event of customer termination for convenience, customer shall not be entitled to any refund of prepaid fees.');
+                    sessionStorage.setItem('compare_redline_proposed', '§ 9.2 Termination for Convenience (Amended). Either party may terminate this agreement or any Order Form for convenience without cause upon sixty (60) days prior written notice (reduced from 90 days). In the event of customer termination for convenience after the first twelve (12) months, customer shall be entitled to a pro-rata refund of any prepaid fees for unused subscription periods.');
+                    router.push('/compare');
+                  }}
+                  className="flex-1 py-2 px-3 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] rounded hover:bg-[#F1F5F9]"
+                >
+                  Open in Comparison Desk
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showToast && (
+        <InformationalToast
+          message={toastMessage}
+          isOpen={showToast}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

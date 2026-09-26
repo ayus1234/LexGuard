@@ -37,8 +37,46 @@ else:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Startup: Ensure demo document is indexed
+    logger.info("Application startup: checking demo document indexing...")
+    try:
+        await _ensure_demo_document_indexed()
+        logger.info("Demo document check complete")
+    except Exception as e:
+        logger.warning(f"Demo document indexing check failed (non-fatal): {str(e)}")
+    
     yield
+    
+    # Shutdown
     await close_database()
+
+
+async def _ensure_demo_document_indexed():
+    """
+    Idempotent check to ensure the primary demo document (doc-saas-v42) is indexed.
+    Only indexes if not already present in the vector store.
+    """
+    from app.services.retrieval_service import retrieval_service
+    from app.core.corpus import get_corpus_document_by_id
+    
+    demo_doc_id = "doc-saas-v42"
+    
+    # Check if already indexed
+    if retrieval_service.is_document_indexed(demo_doc_id):
+        logger.info(f"Demo document {demo_doc_id} already indexed in vector store")
+        return
+    
+    logger.info(f"Demo document {demo_doc_id} not found in vector store, indexing now...")
+    
+    # Get the demo document from corpus
+    demo_doc = get_corpus_document_by_id(demo_doc_id)
+    if not demo_doc:
+        logger.warning(f"Demo document {demo_doc_id} not found in corpus registry")
+        return
+    
+    # Index the document
+    result = await retrieval_service.index_document(demo_doc)
+    logger.info(f"Demo document {demo_doc_id} indexed successfully: {result.chunk_count} chunks, {result.processing_time_ms}ms")
 
 
 def create_application() -> FastAPI:
