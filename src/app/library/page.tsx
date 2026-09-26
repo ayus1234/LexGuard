@@ -24,6 +24,43 @@ export default function SampleLibraryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedJurisdiction, setSelectedJurisdiction] = useState('all');
   const [previewDoc, setPreviewDoc] = useState<SampleDocumentItem | null>(null);
+  const zipFileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleZipFileSelect = (file: File) => {
+    // Validate file extension
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.zip')) {
+      alert('Please select a ZIP file (.zip extension).');
+      return;
+    }
+
+    // Validate file size (100MB max for batch upload)
+    const maxSize = 100 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert('ZIP file size exceeds 100MB limit. Please select a smaller file.');
+      return;
+    }
+
+    // Process the ZIP file
+    // In a real implementation, this would upload to backend
+    alert(`Successfully selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)\n\nBatch ingestion would process this ZIP file containing custom templates.`);
+    
+    // Reset the input value to allow re-selecting the same file
+    if (zipFileInputRef.current) {
+      zipFileInputRef.current.value = '';
+    }
+  };
+
+  const handleZipFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleZipFileSelect(file);
+    }
+  };
+
+  const openZipFilePicker = () => {
+    zipFileInputRef.current?.click();
+  };
 
   const filteredDocs = sampleDocuments.filter((doc) => {
     const matchesSearch =
@@ -343,11 +380,19 @@ export default function SampleLibraryPage() {
             Documentation
           </button>
           <button
-            onClick={() => alert('Initiating secure encrypted zip intake...')}
+            onClick={openZipFilePicker}
             className="px-3 py-1.5 text-xs font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] rounded"
           >
             Batch Intake (.zip)
           </button>
+          <input
+            ref={zipFileInputRef}
+            type="file"
+            className="hidden"
+            accept=".zip"
+            aria-label="Upload a ZIP file containing custom legal templates"
+            onChange={handleZipFileInputChange}
+          />
         </div>
       </div>
 
