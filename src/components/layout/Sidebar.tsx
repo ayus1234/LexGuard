@@ -14,6 +14,7 @@ import {
   Sliders,
   ChevronRight,
   Sparkles,
+  Home,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -25,6 +26,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
 
   const mainNav = [
+    {
+      label: 'Home',
+      href: '/',
+      icon: Home,
+      hasArrow: false,
+    },
     {
       label: 'Analyze Dossier',
       href: '/analyze',
