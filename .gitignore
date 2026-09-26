@@ -38,3 +38,7 @@ backend/.pytest_cache/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Documentation files (keep only README.md)
+*.md
+!README.md
