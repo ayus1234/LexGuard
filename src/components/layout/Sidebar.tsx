@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Sliders,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -41,6 +42,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       href: '/public-law',
       icon: Scale,
       badge: '285',
+    },
+    {
+      label: 'Demo Document Library',
+      href: '/demo-docs',
+      icon: Sparkles,
+      badge: '15',
     },
     {
       label: 'Clause Compare',

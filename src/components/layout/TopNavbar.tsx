@@ -59,6 +59,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { label: 'Analyze', href: '/analyze' },
     { label: 'Sample Library', href: '/library', badge: '200' },
     { label: 'Public Law', href: '/public-law', badge: '285' },
+    { label: 'Demo Docs', href: '/demo-docs', badge: '15' },
     { label: 'Compare', href: '/compare' },
     { label: 'Q&A Grounded', href: '/ask' },
     { label: 'Brief & Checklist', href: '/brief' },
