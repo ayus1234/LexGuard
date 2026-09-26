@@ -25,6 +25,7 @@ export default function IntakeWorkspacePage() {
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [pastedText, setPastedText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSimulatedUpload = (fileName: string) => {
     setUploadedFile(fileName);
@@ -33,6 +34,53 @@ export default function IntakeWorkspacePage() {
       setIsProcessing(false);
       router.push('/analyze');
     }, 1000);
+  };
+
+  const handleFileSelect = (file: File) => {
+    // Validate file size (50MB = 50 * 1024 * 1024 bytes)
+    const maxSize = 50 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert('File size exceeds 50MB limit. Please select a smaller file.');
+      return;
+    }
+
+    // Validate file extension
+    const allowedExtensions = ['.pdf', '.docx', '.txt'];
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    
+    if (!hasValidExtension) {
+      alert('Please select a PDF, DOCX, or TXT file.');
+      return;
+    }
+
+    // Process the file
+    handleSimulatedUpload(file.name);
+    
+    // Reset the input value to allow re-selecting the same file
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const handleDropzoneDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const openFilePicker = () => {
+    fileInputRef.current?.click();
   };
 
   const handlePreload = (docType: string) => {
@@ -173,68 +221,74 @@ export default function IntakeWorkspacePage() {
               role="tabpanel"
               id="tabpanel-upload"
               aria-labelledby="tab-upload"
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragOver(true);
-              }}
-              onDragLeave={() => setDragOver(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragOver(false);
-                if (e.dataTransfer.files?.[0]) {
-                  handleSimulatedUpload(e.dataTransfer.files[0].name);
-                }
-              }}
-              className={`border-2 border-dashed rounded-lg p-8 sm:p-12 text-center transition-colors ${
-                dragOver
-                  ? 'border-[#0284C7] bg-[#EFF6FF]'
-                  : 'border-[#CBD5E1] hover:border-[#94A3B8] bg-[#F8FAFC]'
-              }`}
             >
-              <div className="w-12 h-12 rounded-lg bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-center mx-auto text-[#0284C7] mb-4">
-                <Upload className="w-6 h-6" aria-hidden="true" />
-              </div>
-
-              <div className="space-y-2 max-w-lg mx-auto">
-                <h3 className="text-base sm:text-lg font-semibold text-[#0F172A]">
-                  Drop your legal agreement here or{' '}
-                  <label className="text-[#0284C7] hover:underline cursor-pointer">
-                    Browse files
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".pdf,.docx,.txt"
-                      aria-label="Upload a legal document (PDF, DOCX, or TXT)"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          handleSimulatedUpload(e.target.files[0].name);
-                        }
-                      }}
-                    />
-                  </label>
-                </h3>
-                <p className="text-xs text-[#64748B] leading-normal">
-                  High-resolution optical extraction supports scanned executed agreements, drafts,
-                  and multi-party covenants.
-                </p>
-              </div>
-
-              {/* Supported Format Pills */}
-              <div className="flex items-center justify-center gap-2 pt-6 font-mono text-[10px] text-[#475569]">
-                <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">PDF</span>
-                <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">DOCX</span>
-                <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">TXT</span>
-                <span className="bg-[#EFF6FF] border border-[#BFDBFE] text-[#0284C7] px-2.5 py-1 rounded font-semibold">
-                  Up to 50MB
-                </span>
-              </div>
-
-              {isProcessing && (
-                <div className="mt-6 inline-flex items-center gap-2 text-xs font-mono text-[#0284C7] bg-white px-3 py-1.5 rounded border border-[#BFDBFE] animate-pulse">
-                  <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                  Parsing cryptographic document fingerprint in zero-retention memory...
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDragOver(true);
+                }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={handleDropzoneDrop}
+                onClick={openFilePicker}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openFilePicker();
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label="Click to upload a legal document or drag and drop"
+                className={`border-2 border-dashed rounded-lg p-8 sm:p-12 text-center transition-colors cursor-pointer ${
+                  dragOver
+                    ? 'border-[#0284C7] bg-[#EFF6FF]'
+                    : 'border-[#CBD5E1] hover:border-[#94A3B8] bg-[#F8FAFC]'
+                }`}
+              >
+                <div className="w-12 h-12 rounded-lg bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-center mx-auto text-[#0284C7] mb-4">
+                  <Upload className="w-6 h-6" aria-hidden="true" />
                 </div>
-              )}
+
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <h3 className="text-base sm:text-lg font-semibold text-[#0F172A]">
+                    Drop your legal agreement here or{' '}
+                    <span className="text-[#0284C7] hover:underline">
+                      Browse files
+                    </span>
+                  </h3>
+                  <p className="text-xs text-[#64748B] leading-normal">
+                    High-resolution optical extraction supports scanned executed agreements, drafts,
+                    and multi-party covenants.
+                  </p>
+                </div>
+
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.docx,.txt"
+                  aria-label="Upload a legal document (PDF, DOCX, or TXT)"
+                  onChange={handleFileInputChange}
+                />
+
+                {/* Supported Format Pills */}
+                <div className="flex items-center justify-center gap-2 pt-6 font-mono text-[10px] text-[#475569]">
+                  <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">PDF</span>
+                  <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">DOCX</span>
+                  <span className="bg-white border border-[#CBD5E1] px-2.5 py-1 rounded">TXT</span>
+                  <span className="bg-[#EFF6FF] border border-[#BFDBFE] text-[#0284C7] px-2.5 py-1 rounded font-semibold">
+                    Up to 50MB
+                  </span>
+                </div>
+
+                {isProcessing && (
+                  <div className="mt-6 inline-flex items-center gap-2 text-xs font-mono text-[#0284C7] bg-white px-3 py-1.5 rounded border border-[#BFDBFE] animate-pulse">
+                    <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                    Parsing cryptographic document fingerprint in zero-retention memory...
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
