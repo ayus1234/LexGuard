@@ -322,7 +322,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block" />
 
           {/* 3. User Profile / Active Session Control */}
-          <div className="relative pl-1" ref={profileRef}>
+          <div className="relative pl-1 shrink-0" ref={profileRef}>
             <button
               onClick={() => {
                 setIsProfileOpen(!isProfileOpen);
@@ -333,13 +333,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               aria-label="Counsel Profile and Active Session Settings"
               className="flex items-center gap-2.5 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
             >
-              <div className="text-right hidden sm:block">
-                <div className="text-xs font-semibold text-[#0F172A] leading-tight">
+              <div className="text-right hidden sm:block min-w-0 max-w-[140px] shrink-0">
+                <div className="text-xs font-semibold text-[#0F172A] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                   Lead Legal Counsel
                 </div>
-                <div className="text-[10px] font-mono text-[#059669] flex items-center justify-end gap-1">
+                <div className="text-[10px] font-mono text-[#059669] flex items-center justify-end gap-1 whitespace-nowrap">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse"></span>
-                  Pro Tier / Active Session
+                  <span className="overflow-hidden text-ellipsis">Pro Tier / Active</span>
                 </div>
               </div>
 
