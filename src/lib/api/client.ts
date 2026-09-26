@@ -793,6 +793,50 @@ export const apiClient = {
 
     return res.json();
   },
+
+  /**
+   * Retrieves category counts for a specific document type
+   */
+  async getCorpusCategories(docType?: string | null): Promise<{
+    doc_type: string;
+    total_documents: number;
+    categories: Array<{name: string; count: number}>;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (docType) queryParams.append('doc_type', docType);
+
+    let res: Response;
+    try {
+      const url = `${API_BASE_URL}/api/v1/corpus/categories${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+      res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    } catch (networkErr: any) {
+      throw new LexGuardApiClientError(
+        'Unable to connect to LexGuard corpus service.',
+        'NETWORK_ERROR',
+        0
+      );
+    }
+
+    if (!res.ok) {
+      let errorData: ApiErrorResponse | null = null;
+      try {
+        errorData = await res.json();
+      } catch {
+        // Non-JSON response
+      }
+
+      const message = errorData?.error?.message || `Corpus categories retrieval failed (${res.status})`;
+      const code = errorData?.error?.code || 'CORPUS_ERROR';
+      throw new LexGuardApiClientError(message, code, res.status);
+    }
+
+    return res.json();
+  },
 };
 
 export interface BriefSourceCitation {

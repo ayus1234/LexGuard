@@ -144,3 +144,38 @@ async def get_corpus_stats() -> CorpusStatsResponse:
         categories=categories,
         jurisdictions=jurisdictions,
     )
+
+
+@router.get(
+    "/categories",
+    status_code=status.HTTP_200_OK,
+    summary="Get category counts for a document type",
+    description="Returns categories with document counts for the specified document type or all documents.",
+)
+async def get_corpus_categories(
+    doc_type: Optional[str] = Query(None, description="Filter by document type")
+):
+    """
+    Retrieve category counts for a specific document type.
+    
+    **Query Parameters:**
+    - `doc_type`: Filter by type (template|public_law|fictional_demo) or omit for all
+    
+    **Returns:**
+    Categories with document counts sorted by count descending.
+    """
+    # Filter documents by type if specified
+    docs = corpus_registry.filter(doc_type=doc_type) if doc_type else corpus_registry.list_all()
+    
+    # Count by category
+    from collections import Counter
+    category_counts = Counter(doc.category for doc in docs)
+    
+    # Sort by count descending, then by name
+    sorted_categories = sorted(category_counts.items(), key=lambda x: (-x[1], x[0]))
+    
+    return {
+        "doc_type": doc_type or "all",
+        "total_documents": len(docs),
+        "categories": [{"name": name, "count": count} for name, count in sorted_categories]
+    }
