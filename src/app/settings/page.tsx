@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import PurgeSessionModal from '@/components/modals/PurgeSessionModal';
 import {
   ShieldCheck,
   Lock,
@@ -21,6 +22,7 @@ export default function SettingsPage() {
   const [groundingThreshold, setGroundingThreshold] = useState(99.4);
   const [defaultJurisdiction, setDefaultJurisdiction] = useState('Delaware Law (DGCL)');
   const [savedFeedback, setSavedFeedback] = useState(false);
+  const [showPurgeModal, setShowPurgeModal] = useState(false);
 
   const handleSave = () => {
     setSavedFeedback(true);
@@ -218,7 +220,7 @@ export default function SettingsPage() {
       {/* Actions */}
       <div className="flex items-center justify-between pt-2">
         <button
-          onClick={() => alert('Active cryptographic session wiped and reset.')}
+          onClick={() => setShowPurgeModal(true)}
           className="px-3.5 py-2 text-xs font-semibold text-[#DC2626] bg-white border border-[#FECACA] hover:bg-[#FEF2F2] rounded flex items-center gap-1.5"
         >
           <Trash2 className="w-3.5 h-3.5" />
@@ -232,6 +234,12 @@ export default function SettingsPage() {
           Save Engine Preferences
         </button>
       </div>
+
+      {/* Purge Session Modal */}
+      <PurgeSessionModal
+        isOpen={showPurgeModal}
+        onClose={() => setShowPurgeModal(false)}
+      />
     </div>
   );
 }

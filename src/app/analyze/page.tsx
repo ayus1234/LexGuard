@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { mockDocumentAnalysis } from '@/lib/mock-data/analysis';
 import { Clause } from '@/types';
+import ExpandPdfModal from '@/components/modals/ExpandPdfModal';
 import {
   FileText,
   ShieldAlert,
@@ -34,6 +35,7 @@ export default function DocumentAnalysisPage() {
   const [activeClauseModal, setActiveClauseModal] = useState<Clause | null>(null);
   const [counterProposalCopied, setCounterProposalCopied] = useState(false);
   const [showCounterModal, setShowCounterModal] = useState(false);
+  const [showExpandPdfModal, setShowExpandPdfModal] = useState(false);
 
   const filteredClauses = data.clauses.filter((clause) => {
     if (selectedFilter === 'high') return clause.riskLevel === 'High Attention';
@@ -695,7 +697,7 @@ export default function DocumentAnalysisPage() {
           <div className="p-3 bg-[#F1F5F9] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] font-mono text-[#64748B]">
             <span>Match anchored at {data.activeCitation.matchHash}</span>
             <button
-              onClick={() => alert('Opening full OCR document layer view...')}
+              onClick={() => setShowExpandPdfModal(true)}
               className="text-[#0284C7] hover:underline font-medium"
             >
               Expand Original PDF →
@@ -824,6 +826,15 @@ export default function DocumentAnalysisPage() {
           </div>
         </div>
       )}
+
+      {/* Expand PDF Modal */}
+      <ExpandPdfModal
+        isOpen={showExpandPdfModal}
+        onClose={() => setShowExpandPdfModal(false)}
+        documentTitle={data.document.title}
+        pageCount={data.activeCitation.totalPages}
+        ocrConfidence={data.activeCitation.ocrConfidence}
+      />
     </div>
   );
 }

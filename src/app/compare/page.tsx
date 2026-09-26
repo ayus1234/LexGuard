@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { mockComparisonResult } from '@/lib/mock-data/comparison';
+import InformationalToast from '@/components/ui/InformationalToast';
 import {
   GitCompare,
   Download,
@@ -28,6 +29,8 @@ export default function CompareRedliningPage() {
   const [granularity, setGranularity] = useState<'token' | 'char'>('token');
   const [activeDiffId, setActiveDiffId] = useState('diff-8-3');
   const [decisionFeedback, setDecisionFeedback] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const categories = [
     { id: 'all', label: 'All Differences', count: 34 },
@@ -98,7 +101,10 @@ export default function CompareRedliningPage() {
           </button>
 
           <button
-            onClick={() => alert('Exporting redline comparison summary (.docx)...')}
+            onClick={() => {
+              setToastMessage('Redline Export: This would generate a comprehensive Word document (.docx) with Track Changes enabled, showing all differences between document versions. In production, this connects to your document export service.');
+              setShowToast(true);
+            }}
             className="px-4 py-1.5 text-xs font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] rounded flex items-center gap-1.5 transition-colors shadow-2xs"
           >
             <Download className="w-3.5 h-3.5" aria-hidden="true" />
@@ -371,7 +377,10 @@ export default function CompareRedliningPage() {
 
             <div className="pt-2 border-t border-[#E2E8F0] text-center">
               <button
-                onClick={() => alert('Loading remaining 29 structural differences...')}
+                onClick={() => {
+                  setToastMessage('Structural Differences Viewer: This feature would expand to show all 29 remaining differences with side-by-side comparison, risk scoring, and suggested negotiation strategies. In production, this loads additional diff analysis from your comparison engine.');
+                  setShowToast(true);
+                }}
                 className="text-[11px] font-mono text-[#0284C7] hover:underline"
               >
                 View Remaining 29 Structural Differences →
@@ -388,21 +397,30 @@ export default function CompareRedliningPage() {
 
             <div className="space-y-2">
               <button
-                onClick={() => alert('Compiling comprehensive counsel redline summary...')}
+                onClick={() => {
+                  setToastMessage('Counsel Redline Summary: This would generate a prioritized executive summary document for attorney review, highlighting the most critical differences, risk shifts, and recommended negotiation tactics. Ready for export to PDF or Word format.');
+                  setShowToast(true);
+                }}
                 className="w-full py-2 px-3 text-xs font-semibold bg-[#0F172A] hover:bg-[#1E293B] text-white rounded transition-colors text-center"
               >
                 Generate Counsel Redline Summary
               </button>
 
               <button
-                onClick={() => alert('Exporting Word Track Changes redline file (.docx)...')}
+                onClick={() => {
+                  setToastMessage('Track Changes Export: This feature exports the complete redline comparison as a Word document with Track Changes markup, preserving all formatting and allowing direct editing. Compatible with Microsoft Word 2016+ and Google Docs.');
+                  setShowToast(true);
+                }}
                 className="w-full py-2 px-3 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded transition-colors text-center"
               >
                 Export Redline PDF (Word Track Changes)
               </button>
 
               <button
-                onClick={() => alert('Flagged all 4 non-standard provisions for review.')}
+                onClick={() => {
+                  setToastMessage('Smart Review Triage: This intelligent workflow automatically accepts all market-standard provisions and flags the 4 non-standard clauses for manual review. Each flagged item includes risk assessment and suggested negotiation approach.');
+                  setShowToast(true);
+                }}
                 className="w-full py-2 px-3 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded transition-colors text-center"
               >
                 Accept All Standard / Flag Non-Standard
@@ -437,6 +455,15 @@ export default function CompareRedliningPage() {
           </div>
         </div>
       </div>
+
+      {/* Informational Toast */}
+      {showToast && (
+        <InformationalToast
+          message={toastMessage}
+          isOpen={showToast}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

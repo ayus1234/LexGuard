@@ -27,6 +27,8 @@ export default function SampleLibraryPage() {
   const [previewDoc, setPreviewDoc] = useState<SampleDocumentItem | null>(null);
   const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
   const zipFileInputRef = React.useRef<HTMLInputElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const handleZipFileSelect = (file: File) => {
     // Validate file extension
@@ -82,6 +84,34 @@ export default function SampleLibraryPage() {
 
     return matchesSearch && matchesCategory;
   });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredDocs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedDocs = filteredDocs.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedJurisdiction]);
+
+  // Generate visible page numbers
+  const getVisiblePages = () => {
+    const pages: (number | string)[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push('...');
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 2) pages.push('...');
+      pages.push(totalPages);
+    }
+    return pages;
+  };
 
   return (
     <div className="space-y-6 pb-12">
@@ -279,7 +309,7 @@ export default function SampleLibraryPage() {
 
       {/* 4. Document Cards Grid (3 Columns) */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredDocs.map((doc) => (
+        {paginatedDocs.map((doc) => (
           <div
             key={doc.id}
             className="scaffold-card p-5 space-y-4 border border-[#CBD5E1] hover:border-[#94A3B8] transition-all flex flex-col justify-between"
@@ -402,19 +432,45 @@ export default function SampleLibraryPage() {
       {/* 6. Pagination Footer */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#64748B] pt-2">
         <div className="font-mono text-[11px]">
-          Showing 1-{filteredDocs.length} of 200 verified templates
+          Showing {startIndex + 1}-{Math.min(endIndex, filteredDocs.length)} of {filteredDocs.length} verified templates
         </div>
 
         <div className="flex items-center gap-1 font-mono text-[11px]">
-          <button className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous page"
+          >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <button className="px-2.5 py-1 rounded bg-[#0F172A] text-white font-bold">1</button>
-          <button className="px-2.5 py-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">2</button>
-          <button className="px-2.5 py-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">3</button>
-          <span>...</span>
-          <button className="px-2.5 py-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">34</button>
-          <button className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">
+          {getVisiblePages().map((page, idx) =>
+            typeof page === 'number' ? (
+              <button
+                key={idx}
+                onClick={() => setCurrentPage(page)}
+                className={`px-2.5 py-1 rounded ${
+                  currentPage === page
+                    ? 'bg-[#0F172A] text-white font-bold'
+                    : 'border border-[#CBD5E1] hover:bg-[#F1F5F9]'
+                }`}
+                aria-label={`Go to page ${page}`}
+                aria-current={currentPage === page ? 'page' : undefined}
+              >
+                {page}
+              </button>
+            ) : (
+              <span key={idx} className="px-1">
+                ...
+              </span>
+            )
+          )}
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next page"
+          >
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>

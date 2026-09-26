@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import InformationalToast from '@/components/ui/InformationalToast';
 import {
   suggestedInterrogations,
   initialQATurns,
@@ -150,7 +151,8 @@ export default function DocumentQAPage() {
   const [pageCount, setPageCount] = useState<number>(18);
   const [highlightedQuote, setHighlightedQuote] = useState<string | null>(null);
   const [sessionId] = useState<string>(() => `session-${Date.now()}`);
-
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedDocId = sessionStorage.getItem('lexguard_active_doc_id');
@@ -347,7 +349,10 @@ export default function DocumentQAPage() {
           </span>
 
           <button
-            onClick={() => alert('Exporting Q&A Analysis Memo (.pdf)...')}
+            onClick={() => {
+              setToastMessage('Q&A Analysis Memo Export: This feature would generate a comprehensive PDF memo containing all Q&A exchanges, grounded citations, risk assessments, and strategic recommendations. Perfect for sharing with legal counsel or team members.');
+              setShowToast(true);
+            }}
             className="px-3 py-1 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded flex items-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
@@ -689,7 +694,10 @@ export default function DocumentQAPage() {
                           )}
                         </button>
                         <button
-                          onClick={() => alert('Pinned to Lawyer Summary Brief (/brief)')}
+                          onClick={() => {
+                            setToastMessage('Pinned to Brief: This finding has been added to your Lawyer Summary Brief at /brief. It will appear in the prioritized consultation agenda with full citations and suggested discussion points for attorney review.');
+                            setShowToast(true);
+                          }}
                           className="hover:text-[#0F172A] flex items-center gap-1"
                         >
                           <Pin className="w-3 h-3" />
@@ -861,13 +869,19 @@ export default function DocumentQAPage() {
 
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
-                  onClick={() => alert('Inserted proposed 12-month redline into comparison desk (/compare)')}
+                  onClick={() => {
+                    setToastMessage('Redline Inserted: The proposed 12-month mutual termination clause has been staged in the Comparison Desk (/compare) for side-by-side review against the existing provision. You can refine language before presenting to counterparty.');
+                    setShowToast(true);
+                  }}
                   className="py-1 px-2 text-[10px] font-mono font-semibold bg-[#0F172A] text-white rounded hover:bg-[#1E293B] text-center"
                 >
                   Insert Proposed Redline
                 </button>
                 <button
-                  onClick={() => alert('Opening 2,400 SaaS precedent benchmark ledger...')}
+                  onClick={() => {
+                    setToastMessage('Market Baseline Comparison: This would open a detailed benchmark analysis showing how this provision compares against 2,400 similar SaaS agreements in the LexGuard corpus. Includes percentile rankings, regional variations, and negotiation success rates.');
+                    setShowToast(true);
+                  }}
                   className="py-1 px-2 text-[10px] font-mono font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] rounded hover:bg-[#F1F5F9] text-center"
                 >
                   Compare Market Baseline
