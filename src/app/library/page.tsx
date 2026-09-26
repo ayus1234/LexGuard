@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sampleCategories, sampleDocuments, SampleDocumentItem } from '@/lib/mock-data/library';
+import ZeroRetentionDocsModal from '@/components/modals/ZeroRetentionDocsModal';
 import {
   Search,
   X,
@@ -24,6 +25,7 @@ export default function SampleLibraryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedJurisdiction, setSelectedJurisdiction] = useState('all');
   const [previewDoc, setPreviewDoc] = useState<SampleDocumentItem | null>(null);
+  const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
   const zipFileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleZipFileSelect = (file: File) => {
@@ -374,8 +376,9 @@ export default function SampleLibraryPage() {
 
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => alert('Viewing zero-retention documentation...')}
-            className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded"
+            onClick={() => setIsDocsModalOpen(true)}
+            className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors"
+            aria-label="View zero-retention privacy documentation"
           >
             Documentation
           </button>
@@ -416,6 +419,12 @@ export default function SampleLibraryPage() {
           </button>
         </div>
       </div>
+
+      {/* Zero-Retention Documentation Modal */}
+      <ZeroRetentionDocsModal
+        isOpen={isDocsModalOpen}
+        onClose={() => setIsDocsModalOpen(false)}
+      />
 
       {/* Structure Preview Modal */}
       {previewDoc && (
