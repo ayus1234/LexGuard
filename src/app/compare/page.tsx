@@ -48,7 +48,7 @@ export default function CompareRedliningPage() {
       {/* 1. Header Banner */}
       <div className="bg-[#FFFBEB] border border-[#FCD34D] border-l-4 border-l-[#D97706] rounded-r-lg p-3 text-xs text-[#92400E] flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0" />
+          <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Institutional Redline &amp; Statutory Risk Intelligence:</strong>{' '}
             Automated word-level token reconciliation active. Output reflects automated algorithmic discrepancy analysis and does not constitute formal legal counsel.
@@ -64,11 +64,11 @@ export default function CompareRedliningPage() {
       {decisionFeedback && (
         <div className="p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-lg text-xs font-mono text-[#065F46] flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+            <CheckCircle2 className="w-4 h-4 text-[#059669]" aria-hidden="true" />
             <span>{decisionFeedback}</span>
           </div>
           <button onClick={() => setDecisionFeedback(null)} className="hover:text-black">
-            <X className="w-3.5 h-3.5" />
+            <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}
@@ -92,7 +92,7 @@ export default function CompareRedliningPage() {
             onClick={() => setGranularity(granularity === 'token' ? 'char' : 'token')}
             className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded flex items-center gap-1.5"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#64748B]" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
             <span>Granularity: {granularity === 'token' ? 'Token-Level' : 'Character-Level'}</span>
           </button>
 
@@ -100,7 +100,7 @@ export default function CompareRedliningPage() {
             onClick={() => alert('Exporting redline comparison summary (.docx)...')}
             className="px-4 py-1.5 text-xs font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] rounded flex items-center gap-1.5 transition-colors shadow-2xs"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Export Redline PDF (.docx)</span>
           </button>
         </div>
@@ -116,7 +116,7 @@ export default function CompareRedliningPage() {
 
         <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-1">
           <div className="text-[10px] font-mono text-[#DC2626] uppercase font-bold flex items-center gap-1">
-            <AlertTriangle className="w-3 h-3 text-[#DC2626]" />
+            <AlertTriangle className="w-3 h-3 text-[#DC2626]" aria-hidden="true" />
             HIGH RISK SHIFTS
           </div>
           <div className="text-2xl font-display font-bold text-[#DC2626]">{data.highRiskShifts}</div>
@@ -170,7 +170,7 @@ export default function CompareRedliningPage() {
                 : 'bg-white border-[#CBD5E1] text-[#64748B]'
             }`}
           >
-            {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+            {isLocked ? <Lock className="w-3.5 h-3.5" aria-hidden="true" /> : <Unlock className="w-3.5 h-3.5" />}
             <span>Synchronized Lock</span>
           </button>
         </div>
@@ -381,7 +381,7 @@ export default function CompareRedliningPage() {
           {/* Redline Execution Desk */}
           <div className="scaffold-card border border-[#CBD5E1] p-4 space-y-3 bg-white">
             <h3 className="text-xs font-display font-bold text-[#0F172A] flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
               <span>Redline Execution Desk</span>
             </h3>
 
@@ -427,7 +427,7 @@ export default function CompareRedliningPage() {
           {/* Negotiation Strategy Note */}
           <div className="scaffold-card p-3.5 bg-[#EFF6FF] border border-[#BFDBFE] space-y-1 text-xs">
             <div className="font-semibold text-[#0F172A] flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5 text-[#0284C7]" />
+              <FileCheck className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
               <span>Negotiation Strategy Note</span>
             </div>
             <p className="text-[#334155] leading-relaxed text-[11px]">

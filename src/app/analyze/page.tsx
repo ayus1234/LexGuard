@@ -78,19 +78,19 @@ export default function DocumentAnalysisPage() {
   const getParamIcon = (type: string) => {
     switch (type) {
       case 'parties':
-        return <Users className="w-4 h-4 text-[#0284C7]" />;
+        return <Users className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       case 'term':
-        return <Calendar className="w-4 h-4 text-[#0284C7]" />;
+        return <Calendar className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       case 'financial':
-        return <DollarSign className="w-4 h-4 text-[#0284C7]" />;
+        return <DollarSign className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       case 'termination':
-        return <Clock className="w-4 h-4 text-[#0284C7]" />;
+        return <Clock className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       case 'renewal':
-        return <RefreshCw className="w-4 h-4 text-[#0284C7]" />;
+        return <RefreshCw className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       case 'jurisdiction':
-        return <Scale className="w-4 h-4 text-[#0284C7]" />;
+        return <Scale className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
       default:
-        return <FileText className="w-4 h-4 text-[#0284C7]" />;
+        return <FileText className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />;
     }
   };
 
@@ -99,7 +99,7 @@ export default function DocumentAnalysisPage() {
       {/* 1. Top Educational Session Banner */}
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs text-[#1E293B] flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <ShieldAlert className="w-4 h-4 text-[#0284C7] shrink-0" />
+          <ShieldAlert className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Educational Analysis Session:</strong>{' '}
             Document-grounded deterministic extraction. LexGuard identifies risk patterns and
@@ -121,7 +121,7 @@ export default function DocumentAnalysisPage() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A]">
-              <Sparkles className="w-4 h-4 text-[#0284C7]" />
+              <Sparkles className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
               <span>Smart Context-Adaptive Assistant Logic</span>
               <span className="text-[10px] font-mono bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE] px-2 py-0.5 rounded-full font-semibold">
                 Dynamic Decision Engine Active
@@ -244,7 +244,7 @@ export default function DocumentAnalysisPage() {
             href="/compare"
             className="px-3 py-1.5 text-xs font-medium text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors flex items-center gap-1.5"
           >
-            <GitCompare className="w-3.5 h-3.5 text-[#64748B]" />
+            <GitCompare className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
             <span>Compare with Standard</span>
           </Link>
 
@@ -252,7 +252,7 @@ export default function DocumentAnalysisPage() {
             href="/brief"
             className="px-3 py-1.5 text-xs font-medium text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors flex items-center gap-1.5"
           >
-            <Download className="w-3.5 h-3.5 text-[#64748B]" />
+            <Download className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
             <span>Export Lawyer Brief</span>
           </Link>
 
@@ -260,7 +260,7 @@ export default function DocumentAnalysisPage() {
             href="/ask"
             className="px-4 py-1.5 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] rounded transition-colors flex items-center gap-1.5 shadow-xs"
           >
-            <MessageSquareQuote className="w-3.5 h-3.5 text-sky-400" />
+            <MessageSquareQuote className="w-3.5 h-3.5 text-sky-400" aria-hidden="true" />
             <span>Ask LexGuard Q&amp;A</span>
           </Link>
         </div>
@@ -458,7 +458,7 @@ export default function DocumentAnalysisPage() {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5">
+          <div role="group" aria-label="Filter clauses" className="flex items-center gap-1.5">
             <button
               onClick={() => setSelectedFilter('all')}
               className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
@@ -711,7 +711,7 @@ export default function DocumentAnalysisPage() {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs"
             onClick={() => setActiveClauseModal(null)}
           />
-          <div className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
+          <div role="dialog" aria-modal="true" aria-label="Clause detail inspector" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#0284C7] font-semibold">
@@ -724,8 +724,9 @@ export default function DocumentAnalysisPage() {
               <button
                 onClick={() => setActiveClauseModal(null)}
                 className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A]"
+                aria-label="Close clause inspector"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -766,11 +767,11 @@ export default function DocumentAnalysisPage() {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs"
             onClick={() => setShowCounterModal(false)}
           />
-          <div className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
+          <div role="dialog" aria-modal="true" aria-label="Counter-proposal draft" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#059669] font-semibold flex items-center gap-1">
-                  <FileCheck className="w-3.5 h-3.5" />
+                  <FileCheck className="w-3.5 h-3.5" aria-hidden="true" />
                   Pre-Structured Counter-Proposal Draft
                 </span>
                 <h3 className="text-lg font-display font-bold text-[#0F172A]">
@@ -780,8 +781,9 @@ export default function DocumentAnalysisPage() {
               <button
                 onClick={() => setShowCounterModal(false)}
                 className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A]"
+                aria-label="Close counter-proposal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -808,12 +810,12 @@ export default function DocumentAnalysisPage() {
               >
                 {counterProposalCopied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     <span>Copied to Clipboard</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3.5 h-3.5" />
+                    <Copy className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Copy Proposal Text</span>
                   </>
                 )}

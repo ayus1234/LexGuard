@@ -56,7 +56,7 @@ export default function SettingsPage() {
       {/* 1. Header Banner */}
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
+          <ShieldCheck className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Enterprise Security &amp; Compliance Sandbox:</strong>{' '}
             All settings apply strictly to the current active cryptographic session.
@@ -80,7 +80,7 @@ export default function SettingsPage() {
 
       {savedFeedback && (
         <div className="p-3 bg-[#ECFDF5] border border-[#A7F3D0] rounded-lg text-xs font-mono text-[#065F46] flex items-center gap-2">
-          <Check className="w-4 h-4 text-[#059669]" />
+          <Check className="w-4 h-4 text-[#059669]" aria-hidden="true" />
           <span>Engine preferences updated and synced with active in-memory sandbox.</span>
         </div>
       )}
@@ -88,7 +88,7 @@ export default function SettingsPage() {
       {/* 3. Section 1: Confidentiality & Ephemeral Memory Controls */}
       <div className="scaffold-card p-5 border border-[#CBD5E1] bg-white space-y-4">
         <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3">
-          <Lock className="w-4 h-4 text-[#0284C7]" />
+          <Lock className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
           <h2 className="text-sm font-display font-bold text-[#0F172A]">
             Confidentiality &amp; Ephemeral Memory Controls
           </h2>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
       {/* 4. Section 2: Legal Model Engine Parameters */}
       <div className="scaffold-card p-5 border border-[#CBD5E1] bg-white space-y-4">
         <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3">
-          <Cpu className="w-4 h-4 text-[#0284C7]" />
+          <Cpu className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
           <h2 className="text-sm font-display font-bold text-[#0F172A]">
             Legal Model Engine Parameters
           </h2>
@@ -186,7 +186,7 @@ export default function SettingsPage() {
       <div id="audit" className="scaffold-card p-5 border border-[#CBD5E1] bg-white space-y-4">
         <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
+            <ShieldCheck className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
             <h2 className="text-sm font-display font-bold text-[#0F172A]">Session Audit Trail Log</h2>
           </div>
           <span className="text-[10px] font-mono text-[#64748B]">Immutable Ledger</span>

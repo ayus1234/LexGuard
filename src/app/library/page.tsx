@@ -49,7 +49,7 @@ export default function SampleLibraryPage() {
       {/* 1. Header Vault Banner */}
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <FolderOpen className="w-4 h-4 text-[#0284C7] shrink-0" />
+          <FolderOpen className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Curated Institutional Vault</strong>{' '}
             <span className="font-mono text-[10px] bg-white border border-[#CBD5E1] px-1.5 py-0.2 rounded text-[#0284C7] font-semibold">
@@ -108,7 +108,7 @@ export default function SampleLibraryPage() {
             <span className="text-[10px] font-mono font-bold tracking-wider text-sky-400 uppercase">
               FAST INGESTION ENGINE
             </span>
-            <Zap className="w-4 h-4 text-sky-400" />
+            <Zap className="w-4 h-4 text-sky-400" aria-hidden="true" />
           </div>
 
           <h3 className="text-base font-display font-bold">Direct Preload</h3>
@@ -146,7 +146,7 @@ export default function SampleLibraryPage() {
       <div className="space-y-3">
         {/* Search Bar */}
         <div className="relative">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <input
             type="text"
             value={searchQuery}
@@ -159,7 +159,7 @@ export default function SampleLibraryPage() {
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8] hover:text-[#0F172A]"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -367,7 +367,7 @@ export default function SampleLibraryPage() {
           <span>...</span>
           <button className="px-2.5 py-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">34</button>
           <button className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9]">
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -379,7 +379,7 @@ export default function SampleLibraryPage() {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs"
             onClick={() => setPreviewDoc(null)}
           />
-          <div className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
+          <div role="dialog" aria-modal="true" aria-label="Document structure preview" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#0284C7] font-semibold">
@@ -392,8 +392,9 @@ export default function SampleLibraryPage() {
               <button
                 onClick={() => setPreviewDoc(null)}
                 className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A]"
+                aria-label="Close preview"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 

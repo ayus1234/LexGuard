@@ -100,7 +100,7 @@ export default function SharedDossierPage() {
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 space-y-4">
         <BrandLogo showTag size="md" />
         <div className="flex items-center gap-2 text-xs font-mono text-[#0284C7] bg-white border border-[#CBD5E1] px-4 py-2 rounded shadow-2xs">
-          <Loader2 className="w-4 h-4 animate-spin text-[#0284C7]" />
+          <Loader2 className="w-4 h-4 animate-spin text-[#0284C7]" aria-hidden="true" />
           <span>Verifying cryptographic share token &amp; loading dossier...</span>
         </div>
       </div>
@@ -113,7 +113,7 @@ export default function SharedDossierPage() {
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6">
         <div className="max-w-md w-full bg-white border border-[#CBD5E1] rounded-lg shadow-md p-6 space-y-4 text-center">
           <div className="w-12 h-12 rounded-full bg-[#FEF2F2] border border-[#FECACA] flex items-center justify-center mx-auto text-[#991B1B]">
-            <AlertTriangle className="w-6 h-6" />
+            <AlertTriangle className="w-6 h-6" aria-hidden="true" />
           </div>
 
           <div className="space-y-1">
@@ -163,7 +163,7 @@ export default function SharedDossierPage() {
           <div className="flex items-center gap-3">
             <BrandLogo showTag size="sm" />
             <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE] px-2 py-0.5 rounded-full">
-              <Lock className="w-3 h-3" />
+              <Lock className="w-3 h-3" aria-hidden="true" />
               Shared Read-Only Dossier
             </span>
           </div>
@@ -175,9 +175,9 @@ export default function SharedDossierPage() {
               className="px-3 py-1.5 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] disabled:opacity-60 rounded flex items-center gap-1.5 transition-colors shadow-2xs"
             >
               {isExportingPdf ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
               ) : (
-                <Download className="w-3.5 h-3.5" />
+                <Download className="w-3.5 h-3.5" aria-hidden="true" />
               )}
               <span className="hidden sm:inline">Export Executive Brief (PDF)</span>
               <span className="sm:hidden">PDF</span>
@@ -189,9 +189,9 @@ export default function SharedDossierPage() {
               className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-60 rounded flex items-center gap-1.5 transition-colors"
             >
               {isExportingDocx ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" aria-hidden="true" />
               ) : (
-                <FileText className="w-3.5 h-3.5 text-[#64748B]" />
+                <FileText className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
               )}
               <span className="hidden sm:inline">Export Word Checklist (.docx)</span>
               <span className="sm:hidden">Word</span>
@@ -223,17 +223,17 @@ export default function SharedDossierPage() {
 
           <div className="flex flex-wrap items-center gap-4 text-xs text-[#64748B]">
             <span className="flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
+              <FileText className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
               Format: {brief.document_type}
             </span>
             {brief.jurisdiction && (
               <span className="flex items-center gap-1">
-                <Scale className="w-3.5 h-3.5 text-[#0284C7]" />
+                <Scale className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
                 Jurisdiction: {brief.jurisdiction}
               </span>
             )}
             <span className="flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#059669]" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#059669]" aria-hidden="true" />
               {brief.citations_verified_count} Citations Verified
             </span>
           </div>
@@ -253,7 +253,7 @@ export default function SharedDossierPage() {
                 : 'text-[#475569] hover:bg-[#F1F5F9]'
             }`}
           >
-            <FileText className="w-3.5 h-3.5" />
+            <FileText className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Executive Brief &amp; Attention Areas</span>
           </button>
           <button
@@ -264,7 +264,7 @@ export default function SharedDossierPage() {
                 : 'text-[#475569] hover:bg-[#F1F5F9]'
             }`}
           >
-            <CheckSquare className="w-3.5 h-3.5" />
+            <CheckSquare className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Pre-Execution Checklist ({brief.checklist.length})</span>
           </button>
         </div>
@@ -275,7 +275,7 @@ export default function SharedDossierPage() {
             {/* Attention Areas */}
             <div className="scaffold-card p-5 bg-white border border-[#CBD5E1] space-y-4">
               <h2 className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-[#D97706]" />
+                <AlertTriangle className="w-4 h-4 text-[#D97706]" aria-hidden="true" />
                 <span>Critical Attention Areas ({brief.attention_areas.length})</span>
               </h2>
 
@@ -325,7 +325,7 @@ export default function SharedDossierPage() {
         {activeTab === 'checklist' && (
           <div className="scaffold-card p-5 bg-white border border-[#CBD5E1] space-y-4">
             <h2 className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-[#0284C7]" />
+              <CheckSquare className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
               <span>Pre-Execution Verification Checklist</span>
             </h2>
 
@@ -357,7 +357,7 @@ export default function SharedDossierPage() {
 
         {/* Legal Disclaimer */}
         <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg p-4 flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" />
+          <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" aria-hidden="true" />
           <div className="text-xs space-y-0.5">
             <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0284C7]">
               MANDATORY EDUCATIONAL &amp; NON-LEGAL ADVICE DISCLAIMER

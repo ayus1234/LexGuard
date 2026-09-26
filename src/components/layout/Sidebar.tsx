@@ -73,6 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       )}
 
       <aside
+        aria-label="Sidebar Navigation"
         className={`w-64 shrink-0 bg-[#FFFFFF] border-r border-[#E2E8F0] flex flex-col justify-between p-3.5 transition-transform duration-200 z-30 h-full overflow-y-auto select-none ${
           isOpen
             ? 'fixed inset-y-0 left-0 translate-x-0 shadow-lg'
@@ -85,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <div className="text-[10px] font-mono font-bold tracking-wider text-[#64748B] uppercase px-2 mb-2">
               Inspection Hub
             </div>
-            <nav className="space-y-1">
+            <nav aria-label="Inspection Hub Navigation" className="space-y-1">
               {mainNav.map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
@@ -103,6 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     <div className="flex items-center gap-2.5">
                       <Icon
                         className={`w-4 h-4 ${isActive ? 'text-sky-400' : 'text-[#64748B]'}`}
+                        aria-hidden="true"
                       />
                       <span>{item.label}</span>
                     </div>
@@ -122,6 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     {item.hasArrow && !item.badge && (
                       <ChevronRight
                         className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#94A3B8]'}`}
+                        aria-hidden="true"
                       />
                     )}
                   </Link>
@@ -141,7 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <span className="font-semibold text-[#1E293B]">Corpus Integrity</span>
                 <span className="font-mono font-bold text-[#0284C7]">100%</span>
               </div>
-              <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden" role="progressbar" aria-valuenow={100} aria-valuemin={0} aria-valuemax={100} aria-label="Corpus integrity 100%">
                 <div className="bg-[#0284C7] h-full w-full rounded-full"></div>
               </div>
               <p className="text-[10px] text-[#64748B] leading-tight">
@@ -182,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             href="/settings#audit"
             className="flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded transition-colors"
           >
-            <ShieldCheck className="w-4 h-4 text-[#64748B]" />
+            <ShieldCheck className="w-4 h-4 text-[#64748B]" aria-hidden="true" />
             <span>Audit Trail Log</span>
           </Link>
           <Link
@@ -193,7 +196,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
             }`}
           >
-            <Sliders className="w-4 h-4 text-[#64748B]" />
+            <Sliders className="w-4 h-4 text-[#64748B]" aria-hidden="true" />
             <span>Engine Preferences</span>
           </Link>
         </div>

@@ -48,7 +48,7 @@ export default function PublicLawPage() {
       {/* 1. Header Banner */}
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Scale className="w-4 h-4 text-[#0284C7] shrink-0" />
+          <Scale className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Public Statutory Corpus:</strong>{' '}
             285 Codified Federal, State, and Model Legal Frameworks for automated compliance benchmarking.
@@ -86,7 +86,7 @@ export default function PublicLawPage() {
       <div className="space-y-3">
         {/* Search Bar */}
         <div className="relative">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <input
             type="text"
             value={searchQuery}
@@ -99,7 +99,7 @@ export default function PublicLawPage() {
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8] hover:text-[#0F172A]"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -179,7 +179,7 @@ export default function PublicLawPage() {
                 className="inline-flex items-center gap-1 text-xs text-[#0284C7] hover:underline font-medium"
               >
                 <span>Inspect Statute</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function PublicLawPage() {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs"
             onClick={() => setActiveStatuteModal(null)}
           />
-          <div className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
+          <div role="dialog" aria-modal="true" aria-label="Statute inspection detail" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#0284C7] font-semibold">
@@ -207,8 +207,9 @@ export default function PublicLawPage() {
               <button
                 onClick={() => setActiveStatuteModal(null)}
                 className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A]"
+                aria-label="Close statute detail"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 

@@ -89,7 +89,7 @@ export default function IntakeWorkspacePage() {
       <div className="scaffold-card overflow-hidden shadow-xs border border-[#CBD5E1]">
         {/* Tab Navigation */}
         <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-4 pt-3 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+          <div role="tablist" aria-label="Document intake method" className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab('upload')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-t border-b-2 flex items-center gap-2 transition-colors ${
@@ -97,8 +97,12 @@ export default function IntakeWorkspacePage() {
                   ? 'border-[#0284C7] bg-white text-[#0F172A] shadow-2xs'
                   : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
               }`}
+              role="tab"
+              aria-selected={activeTab === 'upload'}
+              id="tab-upload"
+              aria-controls="tabpanel-upload"
             >
-              <Upload className="w-3.5 h-3.5" />
+              <Upload className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Upload File</span>
             </button>
 
@@ -109,8 +113,12 @@ export default function IntakeWorkspacePage() {
                   ? 'border-[#0284C7] bg-white text-[#0F172A] shadow-2xs'
                   : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
               }`}
+              role="tab"
+              aria-selected={activeTab === 'paste'}
+              id="tab-paste"
+              aria-controls="tabpanel-paste"
             >
-              <FileText className="w-3.5 h-3.5" />
+              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Paste Text</span>
             </button>
 
@@ -121,8 +129,12 @@ export default function IntakeWorkspacePage() {
                   ? 'border-[#0284C7] bg-white text-[#0F172A] shadow-2xs'
                   : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
               }`}
+              role="tab"
+              aria-selected={activeTab === 'library'}
+              id="tab-library"
+              aria-controls="tabpanel-library"
             >
-              <FolderKanban className="w-3.5 h-3.5" />
+              <FolderKanban className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Sample Library</span>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
                 200
@@ -136,8 +148,12 @@ export default function IntakeWorkspacePage() {
                   ? 'border-[#0284C7] bg-white text-[#0F172A] shadow-2xs'
                   : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
               }`}
+              role="tab"
+              aria-selected={activeTab === 'public'}
+              id="tab-public"
+              aria-controls="tabpanel-public"
             >
-              <Scale className="w-3.5 h-3.5" />
+              <Scale className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Public Legal Document</span>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
                 285
@@ -155,6 +171,9 @@ export default function IntakeWorkspacePage() {
           {/* TAB 1: Upload File */}
           {activeTab === 'upload' && (
             <div
+              role="tabpanel"
+              id="tabpanel-upload"
+              aria-labelledby="tab-upload"
               onDragOver={(e) => {
                 e.preventDefault();
                 setDragOver(true);
@@ -174,7 +193,7 @@ export default function IntakeWorkspacePage() {
               }`}
             >
               <div className="w-12 h-12 rounded-lg bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-center mx-auto text-[#0284C7] mb-4">
-                <Upload className="w-6 h-6" />
+                <Upload className="w-6 h-6" aria-hidden="true" />
               </div>
 
               <div className="space-y-2 max-w-lg mx-auto">
@@ -185,6 +204,8 @@ export default function IntakeWorkspacePage() {
                     <input
                       type="file"
                       className="hidden"
+                      accept=".pdf,.docx,.txt"
+                      aria-label="Upload a legal document (PDF, DOCX, or TXT)"
                       onChange={(e) => {
                         if (e.target.files?.[0]) {
                           handleSimulatedUpload(e.target.files[0].name);
@@ -211,7 +232,7 @@ export default function IntakeWorkspacePage() {
 
               {isProcessing && (
                 <div className="mt-6 inline-flex items-center gap-2 text-xs font-mono text-[#0284C7] bg-white px-3 py-1.5 rounded border border-[#BFDBFE] animate-pulse">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                   Parsing cryptographic document fingerprint in zero-retention memory...
                 </div>
               )}
@@ -220,8 +241,10 @@ export default function IntakeWorkspacePage() {
 
           {/* TAB 2: Paste Text */}
           {activeTab === 'paste' && (
-            <div className="space-y-4">
+            <div role="tabpanel" id="tabpanel-paste" aria-labelledby="tab-paste" className="space-y-4">
+              <label htmlFor="paste-contract-text" className="sr-only">Paste contract text</label>
               <textarea
+                id="paste-contract-text"
                 value={pastedText}
                 onChange={(e) => setPastedText(e.target.value)}
                 placeholder="Paste contract provisions, clauses, master services agreements, or covenants here for immediate structured risk extraction and plain-English synthesis..."
@@ -255,7 +278,7 @@ export default function IntakeWorkspacePage() {
 
           {/* TAB 3: Sample Library Quick Pick */}
           {activeTab === 'library' && (
-            <div className="space-y-3">
+            <div role="tabpanel" id="tabpanel-library" aria-labelledby="tab-library" className="space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#64748B]">Select a verified template from the 200-document corpus:</span>
                 <Link href="/library" className="text-[#0284C7] hover:underline font-medium">
@@ -264,42 +287,42 @@ export default function IntakeWorkspacePage() {
               </div>
 
               <div className="grid sm:grid-cols-3 gap-3">
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     Enterprise SaaS MSA &amp; SLA v4.2
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">18 pgs • Delaware Law • Cloud Provisioning</div>
-                </div>
+                </button>
 
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     Commercial Real Estate Triple-Net (NNN)
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">24 pgs • Texas Statutory • CREI Model</div>
-                </div>
+                </button>
 
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     Mutual Confidentiality (NDA)
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">6 pgs • California Law • Trade Secrets</div>
-                </div>
+                </button>
               </div>
             </div>
           )}
 
           {/* TAB 4: Public Legal Document Quick Pick */}
           {activeTab === 'public' && (
-            <div className="space-y-3">
+            <div role="tabpanel" id="tabpanel-public" aria-labelledby="tab-public" className="space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#64748B]">Select a codified statute from the 285-document public law catalog:</span>
                 <Link href="/public-law" className="text-[#0284C7] hover:underline font-medium">
@@ -308,35 +331,35 @@ export default function IntakeWorkspacePage() {
               </div>
 
               <div className="grid sm:grid-cols-3 gap-3">
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     Delaware General Corp Law § 102(b)(7)
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">8 Del. C. § 102 • Officer Exculpation</div>
-                </div>
+                </button>
 
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     UCC § 2-719 Remedy Limitations
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">Federal UCC • Consequential Damages</div>
-                </div>
+                </button>
 
-                <div
+                <button
                   onClick={() => router.push('/analyze')}
-                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors"
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
                 >
                   <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
                     California Bus. &amp; Prof. § 16600
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">Cal. SB 699 • Non-Compete Invalidation</div>
-                </div>
+                </button>
               </div>
             </div>
           )}
@@ -344,7 +367,7 @@ export default function IntakeWorkspacePage() {
           {/* One-Click Pre-Loaders (Stitch screen) */}
           <div className="pt-2 border-t border-[#E2E8F0] flex flex-wrap items-center gap-3 text-xs">
             <span className="font-mono text-[11px] font-bold text-[#475569] uppercase flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[#0284C7]" />
+              <Zap className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
               One-Click Pre-Loaders:
             </span>
 
@@ -375,7 +398,7 @@ export default function IntakeWorkspacePage() {
 
           {/* Session Confidentiality Guaranteed banner */}
           <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg p-3.5 flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" aria-hidden="true" />
             <div className="text-xs space-y-0.5">
               <div className="font-semibold text-[#0F172A]">Session Confidentiality Guaranteed</div>
               <p className="text-[#334155] leading-relaxed text-[11px]">
@@ -571,7 +594,7 @@ export default function IntakeWorkspacePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto shrink-0">
             <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3.5 space-y-1">
               <div className="flex items-center justify-between">
-                <Scale className="w-4 h-4 text-[#0284C7]" />
+                <Scale className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
                 <span className="text-xs font-mono font-bold text-[#0F172A]">99.8%</span>
               </div>
               <div className="text-xs font-semibold text-[#0F172A]">Statutory Consistency</div>
@@ -580,7 +603,7 @@ export default function IntakeWorkspacePage() {
 
             <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3.5 space-y-1">
               <div className="flex items-center justify-between">
-                <ShieldCheck className="w-4 h-4 text-[#059669]" />
+                <ShieldCheck className="w-4 h-4 text-[#059669]" aria-hidden="true" />
                 <span className="text-xs font-mono font-bold text-[#0F172A]">AES-256</span>
               </div>
               <div className="text-xs font-semibold text-[#0F172A]">Transient Storage</div>
@@ -589,7 +612,7 @@ export default function IntakeWorkspacePage() {
 
             <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3.5 space-y-1">
               <div className="flex items-center justify-between">
-                <Layers className="w-4 h-4 text-[#D97706]" />
+                <Layers className="w-4 h-4 text-[#D97706]" aria-hidden="true" />
                 <span className="text-xs font-mono font-bold text-[#0F172A]">1M Context</span>
               </div>
               <div className="text-xs font-semibold text-[#0F172A]">Long-Context Parser</div>

@@ -249,7 +249,7 @@ export default function BriefAndChecklistPage() {
             </span>
             {isLoading && (
               <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded-full border border-[#BFDBFE]">
-                <Loader2 className="w-3 h-3 animate-spin" />
+                <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
                 Live Gemini Synthesis
               </span>
             )}
@@ -260,7 +260,7 @@ export default function BriefAndChecklistPage() {
           </h1>
 
           <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A]">
-            <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
+            <FileText className="w-3.5 h-3.5 text-[#0284C7]" aria-hidden="true" />
             <span>Target: {brief?.document_title || activeDocTitle}</span>
             {brief?.jurisdiction && (
               <span className="text-[11px] font-mono font-normal text-[#64748B]">
@@ -282,9 +282,9 @@ export default function BriefAndChecklistPage() {
             className="px-3.5 py-1.5 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] disabled:opacity-60 rounded flex items-center gap-1.5 transition-colors shadow-2xs"
           >
             {isExportingPdf ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
             ) : (
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5" aria-hidden="true" />
             )}
             <span>{isExportingPdf ? 'Generating PDF...' : 'Export Executive Brief (PDF)'}</span>
           </button>
@@ -295,9 +295,9 @@ export default function BriefAndChecklistPage() {
             className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-60 rounded flex items-center gap-1.5 transition-colors"
           >
             {isExportingDocx ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" aria-hidden="true" />
             ) : (
-              <FileText className="w-3.5 h-3.5 text-[#64748B]" />
+              <FileText className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
             )}
             <span>{isExportingDocx ? 'Exporting Word...' : 'Export Word Checklist (.docx)'}</span>
           </button>
@@ -308,11 +308,11 @@ export default function BriefAndChecklistPage() {
             className="px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-60 rounded flex items-center gap-1.5 transition-colors"
           >
             {isSharing ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0284C7]" aria-hidden="true" />
             ) : copiedToken ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
             ) : (
-              <Share2 className="w-3.5 h-3.5 text-[#64748B]" />
+              <Share2 className="w-3.5 h-3.5 text-[#64748B]" aria-hidden="true" />
             )}
             <span>
               {isSharing
@@ -336,7 +336,7 @@ export default function BriefAndChecklistPage() {
                 : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
             }`}
           >
-            <CheckSquare className="w-3.5 h-3.5" />
+            <CheckSquare className="w-3.5 h-3.5" aria-hidden="true" />
             <span>1. Action Checklist (&ldquo;Before You Proceed&rdquo;)</span>
             <span
               className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
@@ -355,7 +355,7 @@ export default function BriefAndChecklistPage() {
                 : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
             }`}
           >
-            <FileText className="w-3.5 h-3.5" />
+            <FileText className="w-3.5 h-3.5" aria-hidden="true" />
             <span>2. Lawyer Preparation Brief (Agenda &amp; Dossier)</span>
             <span
               className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
@@ -402,7 +402,7 @@ export default function BriefAndChecklistPage() {
 
         <div className="bg-white border border-[#CBD5E1] rounded-lg p-4 space-y-1">
           <div className="text-[10px] font-mono text-[#DC2626] uppercase font-bold flex items-center gap-1">
-            <AlertTriangle className="w-3 h-3 text-[#DC2626]" />
+            <AlertTriangle className="w-3 h-3 text-[#DC2626]" aria-hidden="true" />
             URGENT BLOCKERS
           </div>
           <div className="text-3xl font-display font-bold text-[#DC2626]">{urgentCount}</div>
@@ -517,7 +517,7 @@ export default function BriefAndChecklistPage() {
             <div className="scaffold-card p-5 border border-[#CBD5E1] bg-white space-y-3">
               <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-[#0284C7]" />
+                  <FileText className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
                   <h3 className="text-sm font-display font-bold text-[#0F172A]">
                     Executive Document Synthesis
                   </h3>
@@ -749,7 +749,7 @@ export default function BriefAndChecklistPage() {
 
       {/* 5. Mandatory Non-Legal Advice Disclaimer */}
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg p-4 flex items-start gap-3">
-        <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" />
+        <ShieldCheck className="w-5 h-5 text-[#0284C7] shrink-0 mt-0.5" aria-hidden="true" />
         <div className="text-xs space-y-0.5">
           <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0284C7]">
             MANDATORY EDUCATIONAL &amp; NON-LEGAL ADVICE DISCLAIMER
@@ -764,11 +764,11 @@ export default function BriefAndChecklistPage() {
       {/* 6. Secure Share Modal */}
       {shareModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-[#CBD5E1] rounded-lg shadow-xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 text-left">
+          <div role="dialog" aria-modal="true" aria-label="Share Secure Dossier" className="bg-white border border-[#CBD5E1] rounded-lg shadow-xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 text-left">
             <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#0284C7]">
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="w-4 h-4" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-[#0F172A]">Share Secure Dossier</h3>
@@ -778,15 +778,16 @@ export default function BriefAndChecklistPage() {
               <button
                 onClick={() => setShareModalOpen(false)}
                 className="p-1 rounded hover:bg-[#F1F5F9] text-[#64748B]"
+                aria-label="Close share dialog"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
             {shareError ? (
               <div className="p-3 bg-[#FEF2F2] border border-[#FECACA] rounded text-xs text-[#991B1B] space-y-1">
                 <div className="font-semibold flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4" />
+                  <AlertTriangle className="w-4 h-4" aria-hidden="true" />
                   <span>Sharing Service Notice</span>
                 </div>
                 <p>{shareError}</p>
@@ -816,12 +817,12 @@ export default function BriefAndChecklistPage() {
                     >
                       {copiedToken ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                           <span>Copied</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="w-3.5 h-3.5" />
+                          <Copy className="w-3.5 h-3.5" aria-hidden="true" />
                           <span>Copy</span>
                         </>
                       )}
@@ -832,7 +833,7 @@ export default function BriefAndChecklistPage() {
                 {shareResponse.is_localhost && (
                   <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded text-[11px] text-[#92400E] space-y-1 leading-relaxed">
                     <div className="font-semibold flex items-center gap-1.5">
-                      <AlertTriangle className="w-4 h-4 text-[#D97706]" />
+                      <AlertTriangle className="w-4 h-4 text-[#D97706]" aria-hidden="true" />
                       <span>Localhost Environment Detected</span>
                     </div>
                     <p>
@@ -853,7 +854,7 @@ export default function BriefAndChecklistPage() {
                     rel="noreferrer"
                     className="px-3.5 py-1.5 text-xs font-semibold text-[#0284C7] bg-[#EFF6FF] border border-[#BFDBFE] hover:bg-[#DBEAFE] rounded flex items-center gap-1.5 transition-colors"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Open Shared Dossier</span>
                   </a>
                   <button

@@ -83,7 +83,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         </div>
 
         {/* Center: Main Navigation Tabs */}
-        <nav className="hidden xl:flex items-center gap-1.5">
+        <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-1.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -122,7 +122,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             aria-label="Search corpus"
           >
             <span className="flex items-center gap-1.5 truncate">
-              <Search className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <Search className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
               <span className="truncate">Search corpus, statutes...</span>
             </span>
             <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs">
@@ -147,7 +147,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   isVerificationsOpen ? 'bg-[#0F172A] text-white' : 'hover:bg-[#F1F5F9] text-[#475569]'
                 }`}
               >
-                <History className={`w-4 h-4 ${isVerificationsOpen ? 'text-white' : 'text-[#475569]'}`} />
+                <History className={`w-4 h-4 ${isVerificationsOpen ? 'text-white' : 'text-[#475569]'}`} aria-hidden="true" />
                 <span className="absolute -top-0.5 -right-0.5 bg-[#0284C7] text-white text-[9px] font-mono px-1 rounded-full font-bold">
                   12
                 </span>
@@ -156,12 +156,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               {isVerificationsOpen && (
                 <div
                   role="dialog"
+                  aria-modal="true"
                   aria-label="Session Verifications Panel"
                   className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-[#CBD5E1] rounded-lg shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-left"
                 >
                   <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#059669]" aria-hidden="true" />
                       <span className="text-xs font-bold text-[#0F172A]">Session Verifications (12/12)</span>
                     </div>
                     <span className="text-[10px] font-mono font-semibold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] px-2 py-0.5 rounded-full">
@@ -203,7 +204,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     <span>Telemetry Sync: Live Session</span>
                     <button
                       onClick={() => setIsVerificationsOpen(false)}
-                      className="text-[#0284C7] hover:underline font-semibold"
+                      className="text-[#0284C7] hover:underline font-semibold focus:outline-none focus:ring-2 focus:ring-[#0284C7] rounded px-1"
+                      aria-label="Close verifications panel"
                     >
                       Close (Esc)
                     </button>
@@ -227,18 +229,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   isSecurityOpen ? 'bg-[#0F172A] text-white' : 'hover:bg-[#F1F5F9] text-[#64748B]'
                 }`}
               >
-                <Lock className={`w-4 h-4 ${isSecurityOpen ? 'text-white' : 'text-[#64748B]'}`} />
+                <Lock className={`w-4 h-4 ${isSecurityOpen ? 'text-white' : 'text-[#64748B]'}`} aria-hidden="true" />
               </button>
 
               {isSecurityOpen && (
                 <div
                   role="dialog"
+                  aria-modal="true"
                   aria-label="Security and Privacy Telemetry Panel"
                   className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-[#CBD5E1] rounded-lg shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-left"
                 >
                   <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
                     <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
+                      <ShieldCheck className="w-4 h-4 text-[#0284C7]" aria-hidden="true" />
                       <span className="text-xs font-bold text-[#0F172A]">Security & Privacy Telemetry</span>
                     </div>
                     <span className="text-[10px] font-mono font-semibold bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE] px-2 py-0.5 rounded-full">
@@ -304,7 +307,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     <span>Transport: TLS 1.3 Encrypted</span>
                     <button
                       onClick={() => setIsSecurityOpen(false)}
-                      className="text-[#0284C7] hover:underline font-semibold"
+                      className="text-[#0284C7] hover:underline font-semibold focus:outline-none focus:ring-2 focus:ring-[#0284C7] rounded px-1"
+                      aria-label="Close security panel"
                     >
                       Close (Esc)
                     </button>
@@ -326,7 +330,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               aria-expanded={isProfileOpen}
               aria-label="Counsel Profile and Active Session Settings"
-              className="flex items-center gap-2.5 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none"
+              className="flex items-center gap-2.5 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
             >
               <div className="text-right hidden sm:block">
                 <div className="text-xs font-semibold text-[#0F172A] leading-tight">
@@ -358,6 +362,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             {isProfileOpen && (
               <div
                 role="dialog"
+                aria-modal="true"
                 aria-label="Account Profile and Session Dialog"
                 className="absolute right-0 mt-2 w-72 sm:w-80 bg-white border border-[#CBD5E1] rounded-lg shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-left"
               >
@@ -410,7 +415,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                     className="w-full py-1.5 px-2.5 text-xs font-semibold text-[#991B1B] hover:bg-[#FEF2F2] rounded border border-[#FECACA] flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    <RefreshCw className="w-3.5 h-3.5" />
+                    <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Reset Active Intake Session</span>
                   </button>
                   <button
@@ -429,6 +434,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="xl:hidden p-1.5 rounded hover:bg-[#F1F5F9] text-[#64748B]"
             aria-label="Navigation Menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -437,7 +443,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-[#E2E8F0] bg-white px-4 py-3 space-y-1">
+        <nav aria-label="Mobile Navigation" className="xl:hidden border-t border-[#E2E8F0] bg-white px-4 py-3 space-y-1">
           <button
             onClick={() => {
               setMobileMenuOpen(false);
@@ -446,7 +452,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             className="w-full flex items-center justify-between bg-[#F8FAFC] border border-[#CBD5E1] rounded px-3 py-2 text-xs text-[#64748B] mb-2"
           >
             <span className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5" />
+              <Search className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Search corpus, statutes, clauses...</span>
             </span>
             <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] px-1 rounded">⌘K</kbd>
@@ -476,7 +482,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               </Link>
             );
           })}
-        </div>
+        </nav>
       )}
     </header>
   );

@@ -120,11 +120,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       />
 
       {/* Modal Dialog */}
-      <div className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal w-full max-w-2xl overflow-hidden z-10">
+      <div role="dialog" aria-modal="true" aria-label="Command Palette" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal w-full max-w-2xl overflow-hidden z-10">
         {/* Search Input Bar */}
         <div className="flex items-center px-4 border-b border-[#E2E8F0] bg-[#F8FAFC]">
-          <Search className="w-4 h-4 text-[#64748B] shrink-0" />
+          <Search className="w-4 h-4 text-[#64748B] shrink-0" aria-hidden="true" />
+          <label htmlFor="command-palette-search" className="sr-only">Search commands, corpus, statutes, or clauses</label>
           <input
+            id="command-palette-search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -134,14 +136,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           />
           <button
             onClick={onClose}
-            className="p-1 text-[#94A3B8] hover:text-[#0F172A] rounded"
+            className="p-1 text-[#94A3B8] hover:text-[#0F172A] rounded focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
+            aria-label="Close command palette"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 
         {/* Results List */}
-        <div className="max-h-96 overflow-y-auto p-2 space-y-1">
+        <div role="listbox" aria-label="Search results" className="max-h-96 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
             <div className="py-8 text-center text-xs text-[#64748B]">
               No results found for &ldquo;{query}&rdquo;.
@@ -171,7 +174,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                       </div>
                     </div>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#0284C7] group-hover:translate-x-0.5 transition-all shrink-0" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#0284C7] group-hover:translate-x-0.5 transition-all shrink-0" aria-hidden="true" />
                 </button>
               );
             })
