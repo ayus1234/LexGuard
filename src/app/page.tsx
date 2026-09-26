@@ -20,7 +20,7 @@ import {
 
 export default function IntakeWorkspacePage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'upload' | 'paste' | 'library' | 'public'>('upload');
+  const [activeTab, setActiveTab] = useState<'upload' | 'paste' | 'library' | 'public' | 'demo'>('upload');
   const [dragOver, setDragOver] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [pastedText, setPastedText] = useState('');
@@ -204,6 +204,25 @@ export default function IntakeWorkspacePage() {
               <span>Public Legal Document</span>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
                 285
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('demo')}
+              className={`px-3.5 py-2 text-xs font-semibold rounded-t border-b-2 flex items-center gap-2 transition-colors ${
+                activeTab === 'demo'
+                  ? 'border-[#0284C7] bg-white text-[#0F172A] shadow-2xs'
+                  : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
+              }`}
+              role="tab"
+              aria-selected={activeTab === 'demo'}
+              id="tab-demo"
+              aria-controls="tabpanel-demo"
+            >
+              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Demo Docs</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
+                15
               </span>
             </button>
           </div>
@@ -412,6 +431,50 @@ export default function IntakeWorkspacePage() {
                     California Bus. &amp; Prof. § 16600
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-1">Cal. SB 699 • Non-Compete Invalidation</div>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: Demo Docs Quick Pick */}
+          {activeTab === 'demo' && (
+            <div role="tabpanel" id="tabpanel-demo" aria-labelledby="tab-demo" className="space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#64748B]">Select a demonstration document from the 15-document demo collection:</span>
+                <Link href="/demo-docs" className="text-[#0284C7] hover:underline font-medium">
+                  View all 15 demo docs →
+                </Link>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-3">
+                <button
+                  onClick={() => router.push('/analyze')}
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
+                >
+                  <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
+                    SaaS Subscription Agreement
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-1">12 pgs • Cloud Services • Monthly Billing</div>
+                </button>
+
+                <button
+                  onClick={() => router.push('/analyze')}
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
+                >
+                  <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
+                    Employment Agreement Template
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-1">8 pgs • At-Will • Equity Provisions</div>
+                </button>
+
+                <button
+                  onClick={() => router.push('/analyze')}
+                  className="p-3 rounded border border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#0284C7] cursor-pointer group transition-colors text-left w-full"
+                >
+                  <div className="text-xs font-semibold text-[#0F172A] group-hover:text-[#0284C7]">
+                    Consulting Services Agreement
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-1">10 pgs • Independent Contractor • SOW</div>
                 </button>
               </div>
             </div>
