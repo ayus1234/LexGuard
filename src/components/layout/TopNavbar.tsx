@@ -67,9 +67,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header className="bg-white border-b border-[#E2E8F0] sticky top-0 z-40">
-      <div className="max-w-[1680px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div className="max-w-[1680px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-2">
         {/* Left: Mobile Toggle & Brand Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
@@ -84,14 +84,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         </div>
 
         {/* Center: Main Navigation Tabs */}
-        <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-1.5">
+        <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-1 shrink-0">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1.5 ${
+                className={`px-2 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
                   isActive
                     ? 'bg-[#0F172A] text-white shadow-sm font-semibold'
                     : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
@@ -115,24 +115,24 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         </nav>
 
         {/* Right: Search, Actions, Profile */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 min-w-0 shrink">
           {/* Quick Search Trigger */}
           <button
             onClick={onOpenCommandPalette}
-            className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-2.5 py-1 text-xs text-[#64748B] transition-colors w-48 lg:w-64 justify-between"
+            className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-2.5 py-1 text-xs text-[#64748B] transition-colors w-32 lg:w-40 xl:w-48 justify-between min-w-0"
             aria-label="Search corpus"
           >
-            <span className="flex items-center gap-1.5 truncate">
-              <Search className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
-              <span className="truncate">Search corpus, statutes...</span>
+            <span className="flex items-center gap-1.5 truncate min-w-0">
+              <Search className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" aria-hidden="true" />
+              <span className="truncate">Search corpus...</span>
             </span>
-            <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs">
+            <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs shrink-0">
               ⌘K
             </kbd>
           </button>
 
           {/* Status & Session Indicators */}
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#64748B] relative">
+          <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#64748B] relative shrink-0">
             {/* 1. Notification / Verifications Counter Control */}
             <div className="relative" ref={verificationsRef}>
               <button
