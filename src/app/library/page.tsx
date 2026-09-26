@@ -76,8 +76,8 @@ export default function SampleLibraryPage() {
               Sample Legal Document Library
             </h1>
             <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-              Explore 200 verified, standardized commercial contracts, employment agreements,
-              corporate resolutions, and IP covenants. Instant one-click preloading into the LexGuard intelligence engine.
+              Access 200 standardized legal templates for instant analysis. This curated library democratizes legal document intelligence,
+              providing everyone—from startups to small businesses—with the same analytical foundation used by corporate legal departments.
             </p>
           </div>
 

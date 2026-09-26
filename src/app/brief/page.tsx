@@ -248,9 +248,10 @@ export default function BriefAndChecklistPage() {
               • DOSSIER REF: LG-{activeDocId.substring(0, 14).toUpperCase()} • CONFIDENTIAL LEGAL WORK-PRODUCT PREP
             </span>
             {isLoading && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded-full border border-[#BFDBFE]">
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded-full border border-[#BFDBFE]" role="status" aria-live="polite">
                 <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
                 Live Gemini Synthesis
+                <span className="sr-only">Generating counsel preparation brief</span>
               </span>
             )}
           </div>
@@ -270,7 +271,8 @@ export default function BriefAndChecklistPage() {
           </div>
 
           <p className="text-xs text-[#64748B] leading-relaxed max-w-3xl">
-            Synthesized legal debrief, categorized attention points, prioritized consultation agenda, and pre-negotiation verification checklist.
+            Improves your access to effective legal counsel by providing a structured, prioritized brief with document-grounded questions.
+            This tool helps you maximize attorney time and reduce billable hours by arriving prepared with specific citations and focused discussion points.
           </p>
         </div>
 

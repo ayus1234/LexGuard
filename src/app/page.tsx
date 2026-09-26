@@ -59,8 +59,7 @@ export default function IntakeWorkspacePage() {
           </h1>
 
           <p className="text-sm sm:text-base text-[#475569] leading-relaxed">
-            LexGuard helps you understand complex legal agreements, uncover ambiguous or one-sided
-            clauses, query document-grounded facts, and prepare focused questions for your legal counsel.
+            LexGuard provides AI-powered legal assistance and access to help anyone—from founders to small business owners—understand complex legal agreements, identify one-sided clauses, and prepare focused questions for counsel. No law degree required.
           </p>
         </div>
 
@@ -402,9 +401,9 @@ export default function IntakeWorkspacePage() {
             <div className="text-xs space-y-0.5">
               <div className="font-semibold text-[#0F172A]">Session Confidentiality Guaranteed</div>
               <p className="text-[#334155] leading-relaxed text-[11px]">
-                Documents are parsed in-memory using zero-data-retention sandboxes and are strictly
-                never added to public training data or shared libraries. Cryptographic hashes expire
-                automatically when your session closes.
+                Your documents remain completely private. All parsing happens in secure, zero-retention memory and is strictly
+                never used for AI training. This ensures everyone—from startups to small businesses—can safely access
+                legal document analysis without compromising confidentiality.
               </p>
             </div>
           </div>
@@ -449,8 +448,8 @@ export default function IntakeWorkspacePage() {
                 Plain-English Synthesis
               </h3>
               <p className="text-xs text-[#475569] leading-relaxed">
-                Translates dense, multisyllabic legalese into lucid, digestible operational summaries.
-                Details obligations, financial milestones, and automatic renewal traps.
+                Makes legal documents accessible to everyone by translating dense legalese into clear, understandable summaries.
+                Reveals obligations, financial milestones, and hidden renewal traps—no legal training required.
               </p>
             </div>
             <div className="pt-2 border-t border-[#F1F5F9]">
@@ -546,9 +545,8 @@ export default function IntakeWorkspacePage() {
                 Counsel Preparation Brief &amp; Checklist
               </h3>
               <p className="text-xs text-[#475569] leading-relaxed">
-                Generates a structured, prioritized executive debrief with concrete questions ready for
-                your attorney consultation. Saves hours of billable legal fees by arming you with precise
-                page-line citations, conflicting provisions, and suggested compromise phrasing.
+                Empowers you to work efficiently with attorneys by providing a structured debrief with concrete questions.
+                Improves access to legal services by reducing billable hours while increasing your preparedness and understanding.
               </p>
             </div>
             <div className="pt-2 border-t border-[#F1F5F9] flex flex-wrap items-center gap-2">
@@ -574,8 +572,9 @@ export default function IntakeWorkspacePage() {
               Institutional Benchmark Engine
             </h3>
             <p className="text-xs text-[#475569] leading-relaxed">
-              Cross-checks agreement parameters against federal statutes, state consumer protection acts,
-              and standard commercial conventions.
+              Democratizes access to legal intelligence by comparing your agreement against federal statutes,
+              state consumer protection acts, and standard commercial conventions—giving you the same analytical
+              foundation typically available only to legal professionals.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs">

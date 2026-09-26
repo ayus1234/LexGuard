@@ -360,8 +360,10 @@ export default function DocumentQAPage() {
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs text-[#1E293B] flex items-start gap-2">
         <AlertCircle className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" aria-hidden="true" />
         <p className="leading-snug">
-          <strong className="font-semibold text-[#0F172A]">Educational Assistance Only:</strong>{' '}
-          LexGuard synthesizes verbatim factual content parsed directly from the verified document memory store. It does not compute formal legal counsel or statutory advice. Confirm strategic determinations with qualified counsel.
+          <strong className="font-semibold text-[#0F172A]">AI-Powered Legal Assistance & Education:</strong>{' '}
+          LexGuard makes legal documents accessible by synthesizing document-grounded answers to your questions. 
+          This tool improves your access to legal understanding but does not replace professional legal counsel. 
+          Use these insights to prepare informed questions for your attorney.
         </p>
       </div>
 
@@ -705,7 +707,7 @@ export default function DocumentQAPage() {
 
               {/* Dynamic Loading State */}
               {isLoading && (
-                <div className="space-y-3.5 pl-8 border-l-2 border-[#0284C7] ml-3 animate-pulse">
+                <div className="space-y-3.5 pl-8 border-l-2 border-[#0284C7] ml-3 animate-pulse" role="status" aria-live="polite" aria-atomic="true">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-3.5 h-3.5 text-[#0284C7] animate-spin" aria-hidden="true" />
                     <span className="text-xs font-display font-bold text-[#0F172A]">
@@ -718,6 +720,7 @@ export default function DocumentQAPage() {
                   <div className="text-xs text-[#64748B] leading-relaxed">
                     Searching document embeddings, executing isolated tenant vector similarity search, and verifying verbatim citation quotes against retrieved chunks...
                   </div>
+                  <span className="sr-only">Analyzing your question and searching document for grounded answers</span>
                 </div>
               )}
             </div>

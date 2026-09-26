@@ -50,8 +50,9 @@ export default function CompareRedliningPage() {
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0" aria-hidden="true" />
           <span>
-            <strong className="font-semibold text-[#0F172A]">Institutional Redline &amp; Statutory Risk Intelligence:</strong>{' '}
-            Automated word-level token reconciliation active. Output reflects automated algorithmic discrepancy analysis and does not constitute formal legal counsel.
+            <strong className="font-semibold text-[#0F172A]">AI-Powered Redline Intelligence:</strong>{' '}
+            This tool helps you understand clause-by-clause changes between document versions, making redline analysis accessible
+            without specialized legal training. Review output reflects algorithmic analysis for educational purposes and does not constitute formal legal counsel.
           </span>
         </div>
         <div className="text-[11px] font-mono text-[#0284C7] shrink-0 flex items-center gap-1 font-semibold">

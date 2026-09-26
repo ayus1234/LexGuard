@@ -101,9 +101,9 @@ export default function DocumentAnalysisPage() {
         <div className="flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
-            <strong className="font-semibold text-[#0F172A]">Educational Analysis Session:</strong>{' '}
-            Document-grounded deterministic extraction. LexGuard identifies risk patterns and
-            syntactic variance; this does not constitute formal legal counsel.
+            <strong className="font-semibold text-[#0F172A]">AI-Powered Legal Assistance & Access:</strong>{' '}
+            LexGuard makes complex legal documents understandable by identifying risk patterns and providing plain-English explanations.
+            This educational tool improves your access to legal understanding but does not replace professional legal advice.
           </span>
         </div>
         <div className="font-mono text-[11px] text-[#64748B] shrink-0 flex items-center gap-2">
