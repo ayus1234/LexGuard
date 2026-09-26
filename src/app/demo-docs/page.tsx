@@ -7,10 +7,10 @@ import type { CorpusDocument, CorpusStatsResponse } from '@/types';
 import {
   Search,
   X,
-  Sparkles,
   FolderOpen,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 
 interface CategoryItem {
@@ -136,12 +136,12 @@ export default function DemoDocsPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="bg-[#FEF3C7] border border-[#FCD34D] rounded-lg px-4 py-2 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+      <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg px-4 py-2 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#D97706] shrink-0" aria-hidden="true" />
+          <FolderOpen className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-[#0F172A]">Executable Demo Document Library</strong>{' '}
-            <span className="font-mono text-[10px] bg-white border border-[#E5E7EB] px-1.5 py-0.2 rounded text-[#D97706] font-semibold">
+            <span className="font-mono text-[10px] bg-white border border-[#CBD5E1] px-1.5 py-0.2 rounded text-[#0284C7] font-semibold">
               Live Sandbox
             </span>{' '}
             Complete, fully-parseable legal agreements for live demonstration and system testing.
@@ -183,15 +183,15 @@ export default function DemoDocsPage() {
         </div>
         <div className="scaffold-card p-5 bg-[#0F172A] text-white border-0 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold tracking-wider text-amber-400 uppercase">
+            <span className="text-[10px] font-mono font-bold tracking-wider text-sky-400 uppercase">
               DEMONSTRATION READY
             </span>
-            <Sparkles className="w-4 h-4 text-amber-400" aria-hidden="true" />
+            <Sparkles className="w-4 h-4 text-sky-400" aria-hidden="true" />
           </div>
           <h3 className="text-base font-display font-bold">Live System Testing</h3>
           <div className="flex items-center justify-between text-xs font-mono py-1 border-y border-slate-700">
             <span className="text-slate-400">Corpus Status:</span>
-            <span className="font-bold text-amber-300">Fully Executable</span>
+            <span className="font-bold text-sky-300">Fully Executable</span>
           </div>
           <p className="text-[11px] text-slate-300 leading-relaxed">
             Complete contracts pre-validated for end-to-end demonstration workflows.
@@ -207,7 +207,7 @@ export default function DemoDocsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by keyword, title, citation..."
-            className="w-full pl-10 pr-10 py-3 bg-white border border-[#CBD5E1] rounded-lg text-xs font-sans text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#D97706]"
+            className="w-full pl-10 pr-10 py-3 bg-white border border-[#CBD5E1] rounded-lg text-xs font-sans text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#0284C7]"
           />
           {searchQuery && (
             <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8] hover:text-[#0F172A]">
@@ -219,7 +219,7 @@ export default function DemoDocsPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#D97706]"
+            className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
           >
             {scopeCategories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -230,7 +230,7 @@ export default function DemoDocsPage() {
           <select
             value={selectedJurisdiction}
             onChange={(e) => setSelectedJurisdiction(e.target.value)}
-            className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#D97706]"
+            className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
           >
             <option value="all">Jurisdiction: All</option>
             {stats?.jurisdictions.map((jur) => (
@@ -254,7 +254,7 @@ export default function DemoDocsPage() {
                   }`}
                 >
                   <span>{cat.name}</span>
-                  <span className={`text-[10px] font-mono px-1 rounded-full ${isActive ? 'bg-slate-800 text-amber-300' : 'bg-white text-[#64748B]'}`}>
+                  <span className={`text-[10px] font-mono px-1 rounded-full ${isActive ? 'bg-slate-800 text-sky-300' : 'bg-white text-[#64748B]'}`}>
                     {cat.count}
                   </span>
                 </button>
@@ -266,7 +266,7 @@ export default function DemoDocsPage() {
 
       {isLoading && (
         <div className="text-center py-12 text-[#64748B]">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#D97706]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#0284C7]"></div>
           <p className="mt-3 text-sm">Loading demo documents...</p>
         </div>
       )}
@@ -280,12 +280,12 @@ export default function DemoDocsPage() {
       {!isLoading && !error && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {documents.map((doc) => (
-            <div key={doc.id} className="scaffold-card p-5 space-y-4 border border-[#FCD34D] hover:border-[#D97706] transition-all flex flex-col justify-between">
+            <div key={doc.id} className="scaffold-card p-5 space-y-4 border border-[#CBD5E1] hover:border-[#94A3B8] transition-all flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                  <span className="px-2 py-0.5 rounded bg-[#FEF3C7] text-[#D97706] border border-[#FCD34D]">{doc.category}</span>
+                  <span className="px-2 py-0.5 rounded bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">{doc.category}</span>
                   <span className="px-2 py-0.5 rounded bg-[#F8FAFC] text-[#475569] border border-[#E2E8F0]">{doc.jurisdiction}</span>
-                  <span className="px-2 py-0.5 rounded bg-[#FEF3C7] text-[#B45309] border border-[#FCD34D] text-[9px]">
+                  <span className="px-2 py-0.5 rounded bg-[#F0FDF4] text-[#059669] border border-[#BBF7D0] text-[9px]">
                     DEMO
                   </span>
                 </div>
@@ -323,7 +323,7 @@ export default function DemoDocsPage() {
                   <button onClick={() => setPreviewDoc(doc)} className="py-1.5 px-3 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors">
                     Preview
                   </button>
-                  <button onClick={() => router.push('/analyze')} className="py-1.5 px-3 text-xs font-semibold text-white bg-[#D97706] hover:bg-[#B45309] rounded transition-colors">
+                  <button onClick={() => router.push('/analyze')} className="py-1.5 px-3 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] rounded transition-colors">
                     Analyze
                   </button>
                 </div>
@@ -371,7 +371,7 @@ export default function DemoDocsPage() {
           <div role="dialog" aria-modal="true" aria-label="Document structure preview" className="relative bg-white border border-[#CBD5E1] rounded-lg shadow-modal max-w-xl w-full p-6 space-y-4 z-10">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[10px] font-mono uppercase text-[#D97706] font-semibold">{previewDoc.category} • {previewDoc.jurisdiction}</span>
+                <span className="text-[10px] font-mono uppercase text-[#0284C7] font-semibold">{previewDoc.category} • {previewDoc.jurisdiction}</span>
                 <h3 className="text-lg font-display font-bold text-[#0F172A]">{previewDoc.title}</h3>
               </div>
               <button onClick={() => setPreviewDoc(null)} className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A]" aria-label="Close preview">
@@ -387,7 +387,7 @@ export default function DemoDocsPage() {
                   <li>• Type: {previewDoc.doc_type.replace('_', ' ')}</li>
                   <li>• Pages: {previewDoc.page_count}</li>
                   <li>• Words: {previewDoc.word_count.toLocaleString()}</li>
-                  <li className="text-[#D97706]">• Citation: {previewDoc.citation}</li>
+                  <li className="text-[#0284C7]">• Citation: {previewDoc.citation}</li>
                 </ul>
               </div>
             </div>
@@ -395,7 +395,7 @@ export default function DemoDocsPage() {
               <button onClick={() => setPreviewDoc(null)} className="px-4 py-2 text-xs text-[#64748B] hover:text-[#0F172A] rounded border border-[#CBD5E1]">
                 Close Preview
               </button>
-              <button onClick={() => { setPreviewDoc(null); router.push('/analyze'); }} className="px-4 py-2 text-xs font-semibold bg-[#D97706] text-white rounded hover:bg-[#B45309]">
+              <button onClick={() => { setPreviewDoc(null); router.push('/analyze'); }} className="px-4 py-2 text-xs font-semibold bg-[#0F172A] text-white rounded hover:bg-[#1E293B]">
                 Preload Into Analyzer
               </button>
             </div>
