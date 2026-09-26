@@ -197,7 +197,7 @@ export default function DocumentQAPage() {
     }
     allFindings.push(findingsData);
     sessionStorage.setItem('lexguard_pinned_findings_data', JSON.stringify(allFindings));
-    sessionStorage.setItem('lexguard_pinned_findings', JSON.stringify([...newPinned]));
+    sessionStorage.setItem('lexguard_pinned_findings', JSON.stringify(Array.from(newPinned)));
     
     setToastMessage('Finding pinned to Summary Brief. View at /brief');
     setShowToast(true);
