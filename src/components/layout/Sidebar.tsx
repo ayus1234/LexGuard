@@ -102,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center justify-between px-2.5 py-2 rounded text-xs font-medium transition-colors ${
+                    className={`flex items-center justify-between px-2.5 py-2 rounded text-[11px] font-medium transition-colors ${
                       isActive
                         ? 'bg-[#0F172A] text-white shadow-xs font-semibold'
                         : 'text-[#334155] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
