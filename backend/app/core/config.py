@@ -20,10 +20,22 @@ class Settings(BaseSettings):
     MAX_ANALYSIS_CHAR_COUNT: int = 150000
 
     # Database Configuration (PostgreSQL + pgvector)
-    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/lexguard"
+    # REQUIRED: Must be set via environment variable
+    # Example: postgresql+psycopg://user:password@host:port/database
+    DATABASE_URL: str = ""
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
     DATABASE_POOL_TIMEOUT: int = 30
+    
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def validate_database_url(cls, v: str) -> str:
+        if not v or v == "":
+            raise ValueError(
+                "DATABASE_URL is required. Please set it in your .env file or environment. "
+                "Example: postgresql+psycopg://user:password@host:port/database"
+            )
+        return v
 
     # Retrieval & Vector Store Configuration
     EMBEDDING_DIMENSION: int = 3072
@@ -83,7 +95,7 @@ class Settings(BaseSettings):
         return path
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(Path(__file__).parent.parent.parent / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="ignore",

@@ -232,11 +232,21 @@ export class LexGuardApiClientError extends Error {
   }
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+// Determine API base URL with proper environment handling
+// Production deployments should set NEXT_PUBLIC_API_BASE_URL explicitly
+// Development allows localhost fallback
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 
+  (typeof window !== 'undefined' && window.location?.hostname === 'localhost'
     ? 'http://localhost:8000'
     : 'http://127.0.0.1:8000');
+
+// Log warning if production build without explicit configuration
+if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_API_BASE_URL) {
+  console.warn(
+    '[LexGuard] NEXT_PUBLIC_API_BASE_URL not set in production build. ' +
+    'API requests may fail. Please configure this environment variable.'
+  );
+}
 
 export const apiClient = {
   /**

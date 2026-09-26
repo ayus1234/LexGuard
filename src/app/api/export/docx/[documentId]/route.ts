@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Backend URL configuration
+// Production deployments should set NEXT_PUBLIC_API_BASE_URL explicitly
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+
+// Log warning if production without explicit configuration
+if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_API_BASE_URL) {
+  console.warn('[LexGuard] NEXT_PUBLIC_API_BASE_URL not configured in production');
+}
 
 export async function GET(
   request: NextRequest,
