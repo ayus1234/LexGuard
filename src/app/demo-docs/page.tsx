@@ -140,16 +140,16 @@ export default function DemoDocsPage() {
         <div className="flex items-center gap-2">
           <FolderOpen className="w-4 h-4 text-[#0284C7] shrink-0" aria-hidden="true" />
           <span>
-            <strong className="font-semibold text-[#0F172A]">Executable Demo Document Library</strong>{' '}
+            <strong className="font-semibold text-[#0F172A]">Demo Document Vault</strong>{' '}
             <span className="font-mono text-[10px] bg-white border border-[#CBD5E1] px-1.5 py-0.2 rounded text-[#0284C7] font-semibold">
-              Live Sandbox
+              v1.0 Sandbox
             </span>{' '}
-            Complete, fully-parseable legal agreements for live demonstration and system testing.
+            Executable legal agreements for live demonstration and end-to-end testing.
           </span>
         </div>
         <div className="text-[11px] font-mono text-[#059669] shrink-0 flex items-center gap-1 font-medium">
           <span className="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
-          Ready for Analysis
+          Zero-Retention Testing Active
         </div>
       </div>
 
@@ -157,16 +157,16 @@ export default function DemoDocsPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="space-y-1">
             <div className="text-[10px] font-mono font-bold tracking-wider text-[#64748B] uppercase">
-              DEMO CORPUS / 05 / Executable Contracts
+              CORPUS REPOSITORY / 05 / Executable Contracts
             </div>
             <h1 className="text-3xl font-display font-bold text-[#0F172A] tracking-tight">
               Demo Document Library
             </h1>
             <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-              {stats?.demo_documents_count || 15} complete legal agreements designed for live demonstration, testing, and system validation.
+              Complete legal agreements designed for live demonstration, testing, and system validation.
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
               <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.demo_documents_count || 15}</div>
               <div className="text-[11px] text-[#64748B]">Demo Docs</div>
@@ -178,6 +178,10 @@ export default function DemoDocsPage() {
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
               <div className="text-2xl font-display font-bold text-[#0F172A]">100%</div>
               <div className="text-[11px] text-[#64748B]">Analyzable</div>
+            </div>
+            <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
+              <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.total_count || 500}</div>
+              <div className="text-[11px] text-[#64748B]">Total Corpus</div>
             </div>
           </div>
         </div>
