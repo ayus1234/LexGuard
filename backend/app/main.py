@@ -18,20 +18,20 @@ if TYPE_CHECKING:
     from app.core.config import settings
     from app.core.logging import logger
     from app.utils.file_validation import LexGuardException
-    from app.api.routes import health, documents, analysis, retrieval, brief, share
+    from app.api.routes import health, documents, analysis, retrieval, brief, share, corpus
     from app.db.session import close_database, check_database_health
 else:
     try:
         from backend.app.core.config import settings
         from backend.app.core.logging import logger
         from backend.app.utils.file_validation import LexGuardException
-        from backend.app.api.routes import health, documents, analysis, retrieval, brief, share
+        from backend.app.api.routes import health, documents, analysis, retrieval, brief, share, corpus
         from backend.app.db.session import close_database, check_database_health
     except ImportError:
         from app.core.config import settings
         from app.core.logging import logger
         from app.utils.file_validation import LexGuardException
-        from app.api.routes import health, documents, analysis, retrieval, brief, share
+        from app.api.routes import health, documents, analysis, retrieval, brief, share, corpus
         from app.db.session import close_database, check_database_health
 
 
@@ -97,6 +97,7 @@ def create_application() -> FastAPI:
     application.include_router(retrieval.router, prefix=settings.API_V1_PREFIX)
     application.include_router(brief.router, prefix=settings.API_V1_PREFIX)
     application.include_router(share.router, prefix=settings.API_V1_PREFIX)
+    application.include_router(corpus.router, prefix=settings.API_V1_PREFIX)
 
     return application
 

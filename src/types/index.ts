@@ -232,3 +232,35 @@ export interface PublicLawDocument {
   status: string;
   relevance: string;
 }
+
+// Corpus API Types
+export interface CorpusDocument {
+  id: string;
+  title: string;
+  doc_type: 'template' | 'public_law' | 'fictional_demo';
+  category: string;
+  jurisdiction: string;
+  word_count: number;
+  page_count: number;
+  citation: string;
+  summary: string;
+  accessible: boolean;
+  analyzable: boolean;
+}
+
+export interface CorpusListResponse {
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  documents: CorpusDocument[];
+}
+
+export interface CorpusStatsResponse {
+  total_count: number;
+  templates_count: number;
+  public_laws_count: number;
+  demo_documents_count: number;
+  categories: string[];
+  jurisdictions: string[];
+}

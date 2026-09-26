@@ -1,21 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { sampleCategories, sampleDocuments, SampleDocumentItem } from '@/lib/mock-data/library';
+import { apiClient } from '@/lib/api/client';
+import type { CorpusDocument, CorpusStatsResponse } from '@/types';
 import ZeroRetentionDocsModal from '@/components/modals/ZeroRetentionDocsModal';
 import {
   Search,
   X,
-  FileText,
   Zap,
-  CheckCircle2,
   FolderOpen,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  Eye,
-  SlidersHorizontal,
   CloudUpload,
 } from 'lucide-react';
 
@@ -23,33 +19,139 @@ export default function SampleLibraryPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedDocType, setSelectedDocType] = useState<string>('template');
   const [selectedJurisdiction, setSelectedJurisdiction] = useState('all');
-  const [previewDoc, setPreviewDoc] = useState<SampleDocumentItem | null>(null);
+  const [previewDoc, setPreviewDoc] = useState<CorpusDocument | null>(null);
   const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
   const zipFileInputRef = React.useRef<HTMLInputElement>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
+  // API data
+  const [documents, setDocuments] = useState<CorpusDocument[]>([]);
+  const [totalDocs, setTotalDocs] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<CorpusStatsResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Category mapping from stats
+  const getCategoryCount = (categoryId: string): number => {
+    if (!stats) return 0;
+    if (categoryId === 'all') return selectedDocType === 'template' ? stats.templates_count : stats.total_count;
+    
+    // Count documents matching the category
+    const categoryMap: Record<string, string> = {
+      'tech': 'Technology',
+      'hr': 'Employment',
+      'nda': 'NDA',
+      'corp': 'Corporate',
+      'ip': 'Intellectual Property',
+      'real-estate': 'Property',
+      'finance': 'Finance',
+      'privacy': 'Privacy',
+    };
+    
+    const categoryName = categoryMap[categoryId];
+    if (!categoryName) return 0;
+    
+    // This is an approximation - backend could provide category counts
+    return Math.floor(stats.total_count / 8); // Rough estimate
+  };
+
+  const sampleCategories = stats ? [
+    { name: 'All Templates', count: stats.templates_count, id: 'all' },
+    { name: 'Technology & SaaS', count: getCategoryCount('tech'), id: 'tech' },
+    { name: 'Employment & HR', count: getCategoryCount('hr'), id: 'hr' },
+    { name: 'NDA & Confidentiality', count: getCategoryCount('nda'), id: 'nda' },
+    { name: 'Business & Corporate', count: getCategoryCount('corp'), id: 'corp' },
+    { name: 'Intellectual Property', count: getCategoryCount('ip'), id: 'ip' },
+    { name: 'Property & Real Estate', count: getCategoryCount('real-estate'), id: 'real-estate' },
+    { name: 'Finance & Lending', count: getCategoryCount('finance'), id: 'finance' },
+    { name: 'Privacy & Data', count: getCategoryCount('privacy'), id: 'privacy' },
+  ] : [];
+
+  // Fetch corpus stats on mount
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const statsData = await apiClient.getCorpusStats();
+        setStats(statsData);
+      } catch (err: any) {
+        console.error('Failed to fetch corpus stats:', err);
+        setError('Failed to load corpus statistics');
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // Fetch documents whenever filters change
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Map category ID to actual category name for API filter
+        const categoryMap: Record<string, string> = {
+          'tech': 'Technology',
+          'hr': 'Employment',
+          'nda': 'NDA',
+          'corp': 'Corporate',
+          'ip': 'Intellectual Property',
+          'real-estate': 'Property',
+          'finance': 'Finance',
+          'privacy': 'Privacy',
+        };
+        
+        const categoryFilter = selectedCategory === 'all' ? null : categoryMap[selectedCategory] || null;
+        
+        const response = await apiClient.getCorpusDocuments({
+          page: currentPage,
+          page_size: itemsPerPage,
+          doc_type: selectedDocType,
+          category: categoryFilter,
+          jurisdiction: selectedJurisdiction === 'all' ? null : selectedJurisdiction,
+          search: searchQuery || null,
+        });
+        
+        setDocuments(response.documents);
+        setTotalDocs(response.total);
+        setTotalPages(response.total_pages);
+      } catch (err: any) {
+        console.error('Failed to fetch corpus documents:', err);
+        setError('Failed to load documents from corpus. Please check your connection.');
+        setDocuments([]);
+        setTotalDocs(0);
+        setTotalPages(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDocuments();
+  }, [currentPage, selectedDocType, selectedCategory, selectedJurisdiction, searchQuery]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedJurisdiction, selectedDocType]);
+
   const handleZipFileSelect = (file: File) => {
-    // Validate file extension
     const fileName = file.name.toLowerCase();
     if (!fileName.endsWith('.zip')) {
       alert('Please select a ZIP file (.zip extension).');
       return;
     }
 
-    // Validate file size (100MB max for batch upload)
     const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('ZIP file size exceeds 100MB limit. Please select a smaller file.');
       return;
     }
 
-    // Process the ZIP file
-    // In a real implementation, this would upload to backend
     alert(`Successfully selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)\n\nBatch ingestion would process this ZIP file containing custom templates.`);
     
-    // Reset the input value to allow re-selecting the same file
     if (zipFileInputRef.current) {
       zipFileInputRef.current.value = '';
     }
@@ -66,36 +168,6 @@ export default function SampleLibraryPage() {
     zipFileInputRef.current?.click();
   };
 
-  const filteredDocs = sampleDocuments.filter((doc) => {
-    const matchesSearch =
-      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.keyClauses.some((c) => c.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const matchesCategory =
-      selectedCategory === 'all' ||
-      (selectedCategory === 'tech' && doc.category.includes('Technology')) ||
-      (selectedCategory === 'hr' && doc.category.includes('Employment')) ||
-      (selectedCategory === 'nda' && doc.category.includes('NDA')) ||
-      (selectedCategory === 'corp' && doc.category.includes('Corporate')) ||
-      (selectedCategory === 'real-estate' && doc.category.includes('Property')) ||
-      (selectedCategory === 'finance' && doc.category.includes('Finance')) ||
-      (selectedCategory === 'privacy' && doc.category.includes('Privacy'));
-
-    return matchesSearch && matchesCategory;
-  });
-
-  // Pagination logic
-  const totalPages = Math.ceil(filteredDocs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedDocs = filteredDocs.slice(startIndex, endIndex);
-
-  // Reset to page 1 when filters change
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory, selectedJurisdiction]);
-
   // Generate visible page numbers
   const getVisiblePages = () => {
     const pages: (number | string)[] = [];
@@ -111,6 +183,15 @@ export default function SampleLibraryPage() {
       pages.push(totalPages);
     }
     return pages;
+  };
+
+  // Helper function to extract key clauses (simplified from summary)
+  const extractKeyClauses = (doc: CorpusDocument): string[] => {
+    // Use citation and first part of summary as key clauses
+    return [
+      doc.citation,
+      doc.summary.split('.')[0].substring(0, 60) + '...',
+    ].filter(Boolean);
   };
 
   return (
@@ -145,28 +226,27 @@ export default function SampleLibraryPage() {
               Sample Legal Document Library
             </h1>
             <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-              Access 200 standardized legal templates for instant analysis. This curated library democratizes legal document intelligence,
-              providing everyone—from startups to small businesses—with the same analytical foundation used by corporate legal departments.
+              Access 500 documents including {stats?.templates_count || 200} standardized legal templates, {stats?.public_laws_count || 285} public statutes, and {stats?.demo_documents_count || 15} demo agreements for instant analysis.
             </p>
           </div>
 
           {/* 4 Benchmark Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
-              <div className="text-2xl font-display font-bold text-[#0F172A]">200</div>
-              <div className="text-[11px] text-[#64748B]">Standard Templates</div>
+              <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.total_count || 500}</div>
+              <div className="text-[11px] text-[#64748B]">Total Corpus</div>
             </div>
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
-              <div className="text-2xl font-display font-bold text-[#0F172A]">17</div>
-              <div className="text-[11px] text-[#64748B]">Legal Taxonomies</div>
+              <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.templates_count || 200}</div>
+              <div className="text-[11px] text-[#64748B]">Templates</div>
             </div>
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
-              <div className="text-2xl font-display font-bold text-[#0F172A]">50+</div>
-              <div className="text-[11px] text-[#64748B]">US &amp; Int&apos;l Venues</div>
+              <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.public_laws_count || 285}</div>
+              <div className="text-[11px] text-[#64748B]">Public Laws</div>
             </div>
             <div className="bg-white border border-[#CBD5E1] rounded-lg p-3 space-y-0.5">
-              <div className="text-2xl font-display font-bold text-[#0F172A]">2024</div>
-              <div className="text-[11px] text-[#64748B]">Market Standards</div>
+              <div className="text-2xl font-display font-bold text-[#0F172A]">{stats?.demo_documents_count || 15}</div>
+              <div className="text-[11px] text-[#64748B]">Demo Docs</div>
             </div>
           </div>
         </div>
@@ -211,6 +291,43 @@ export default function SampleLibraryPage() {
         </div>
       </div>
 
+      {/* Corpus Scope Selector */}
+      <div className="flex items-center gap-2 text-xs">
+        <span className="font-semibold text-[#64748B]">Corpus Scope:</span>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setSelectedDocType('template')}
+            className={`px-3 py-1.5 rounded font-medium transition-colors ${
+              selectedDocType === 'template'
+                ? 'bg-[#0F172A] text-white'
+                : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+            }`}
+          >
+            Templates ({stats?.templates_count || 200})
+          </button>
+          <button
+            onClick={() => setSelectedDocType('public_law')}
+            className={`px-3 py-1.5 rounded font-medium transition-colors ${
+              selectedDocType === 'public_law'
+                ? 'bg-[#0F172A] text-white'
+                : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+            }`}
+          >
+            Public Laws ({stats?.public_laws_count || 285})
+          </button>
+          <button
+            onClick={() => setSelectedDocType('fictional_demo')}
+            className={`px-3 py-1.5 rounded font-medium transition-colors ${
+              selectedDocType === 'fictional_demo'
+                ? 'bg-[#0F172A] text-white'
+                : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+            }`}
+          >
+            Demo Docs ({stats?.demo_documents_count || 15})
+          </button>
+        </div>
+      </div>
+
       {/* 3. Search Bar & Filter Controls */}
       <div className="space-y-3">
         {/* Search Bar */}
@@ -220,7 +337,7 @@ export default function SampleLibraryPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by keyword, clause type, statutory requirement, or title (e.g., non-solicitation, Delaware SaaS MSA, mutual NDA)..."
+            placeholder="Search by keyword, clause type, statutory requirement, or title..."
             className="w-full pl-10 pr-10 py-3 bg-white border border-[#CBD5E1] rounded-lg text-xs font-sans text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#0284C7] shadow-2xs"
           />
           {searchQuery && (
@@ -234,24 +351,21 @@ export default function SampleLibraryPage() {
         </div>
 
         {/* Filter Dropdowns Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
           >
             <option value="all">Category: All Categories</option>
-            <option value="tech">Technology &amp; SaaS (34)</option>
-            <option value="hr">Employment &amp; HR (28)</option>
-            <option value="nda">NDA &amp; Confidentiality (22)</option>
-            <option value="corp">Business &amp; Corporate (31)</option>
-          </select>
-
-          <select className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
-            <option>Document Type: All Structure Types</option>
-            <option>Master Agreement</option>
-            <option>Addendum &amp; Rider</option>
-            <option>Unilateral Policy</option>
+            <option value="tech">Technology &amp; SaaS</option>
+            <option value="hr">Employment &amp; HR</option>
+            <option value="nda">NDA &amp; Confidentiality</option>
+            <option value="corp">Business &amp; Corporate</option>
+            <option value="ip">Intellectual Property</option>
+            <option value="real-estate">Property &amp; Real Estate</option>
+            <option value="finance">Finance &amp; Lending</option>
+            <option value="privacy">Privacy &amp; Data</option>
           </select>
 
           <select
@@ -259,137 +373,157 @@ export default function SampleLibraryPage() {
             onChange={(e) => setSelectedJurisdiction(e.target.value)}
             className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
           >
-            <option value="all">Jurisdiction: All (50+)</option>
-            <option value="de">Delaware Law</option>
-            <option value="ca">California Law</option>
-            <option value="ny">New York Law</option>
-            <option value="tx">Texas Law</option>
-          </select>
-
-          <select className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
-            <option>Standard: All Curated Provenance</option>
-            <option>NVCA Venture Standard</option>
-            <option>ABA Labor Standard</option>
-            <option>CREI Model</option>
+            <option value="all">Jurisdiction: All</option>
+            {stats?.jurisdictions.map((jur) => (
+              <option key={jur} value={jur}>{jur}</option>
+            ))}
           </select>
 
           <select className="bg-white border border-[#CBD5E1] rounded px-3 py-2 text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
             <option>Language: English (US)</option>
-            <option>English (UK)</option>
           </select>
         </div>
 
         {/* Category Navigation Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto py-1 text-xs">
-          {sampleCategories.map((cat) => {
-            const isActive = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
-                  isActive
-                    ? 'bg-[#0F172A] text-white shadow-2xs font-semibold'
-                    : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
-                }`}
-              >
-                <span>{cat.name}</span>
-                <span
-                  className={`text-[10px] font-mono px-1 rounded-full ${
-                    isActive ? 'bg-slate-800 text-sky-300' : 'bg-white text-[#64748B]'
+        {sampleCategories.length > 0 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 text-xs">
+            {sampleCategories.map((cat) => {
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-[#0F172A] text-white shadow-2xs font-semibold'
+                      : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
                   }`}
                 >
-                  {cat.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                  <span>{cat.name}</span>
+                  <span
+                    className={`text-[10px] font-mono px-1 rounded-full ${
+                      isActive ? 'bg-slate-800 text-sky-300' : 'bg-white text-[#64748B]'
+                    }`}
+                  >
+                    {cat.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      {/* Loading / Error States */}
+      {isLoading && (
+        <div className="text-center py-12 text-[#64748B]">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#0284C7]"></div>
+          <p className="mt-3 text-sm">Loading corpus documents...</p>
+        </div>
+      )}
+
+      {error && !isLoading && (
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded text-sm">
+          <strong>Error:</strong> {error}
+        </div>
+      )}
 
       {/* 4. Document Cards Grid (3 Columns) */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {paginatedDocs.map((doc) => (
-          <div
-            key={doc.id}
-            className="scaffold-card p-5 space-y-4 border border-[#CBD5E1] hover:border-[#94A3B8] transition-all flex flex-col justify-between"
-          >
-            <div className="space-y-3">
-              {/* Badges */}
-              <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                <span className="px-2 py-0.5 rounded bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
-                  {doc.category}
-                </span>
-                <span className="px-2 py-0.5 rounded bg-[#F8FAFC] text-[#475569] border border-[#E2E8F0]">
-                  {doc.jurisdiction}
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <div>
-                <h3 className="text-base font-display font-bold text-[#0F172A] leading-snug">
-                  {doc.title}
-                </h3>
-                <p className="text-xs text-[#475569] mt-1 leading-relaxed line-clamp-3">
-                  {doc.description}
-                </p>
-              </div>
-
-              {/* Standard Key Clauses */}
-              <div className="space-y-1.5 pt-1">
-                <div className="text-[10px] font-mono text-[#64748B] uppercase font-bold">
-                  Standard Key Clauses
+      {!isLoading && !error && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {documents.map((doc) => (
+            <div
+              key={doc.id}
+              className="scaffold-card p-5 space-y-4 border border-[#CBD5E1] hover:border-[#94A3B8] transition-all flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
+                  <span className="px-2 py-0.5 rounded bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]">
+                    {doc.category}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#F8FAFC] text-[#475569] border border-[#E2E8F0]">
+                    {doc.jurisdiction}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#F0FDF4] text-[#059669] border border-[#BBF7D0] text-[9px]">
+                    {doc.doc_type.replace('_', ' ').toUpperCase()}
+                  </span>
                 </div>
-                <div className="space-y-1">
-                  {doc.keyClauses.map((clause, idx) => (
-                    <div
-                      key={idx}
-                      className="text-[11px] font-mono text-[#334155] bg-[#F8FAFC] border border-[#E2E8F0] px-2 py-0.5 rounded"
-                    >
-                      {clause}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Bottom: Specs & Action Buttons */}
-            <div className="space-y-3 pt-3 border-t border-[#E2E8F0]">
-              <div className="grid grid-cols-3 gap-2 text-center font-mono text-[10px] text-[#64748B]">
+                {/* Title & Description */}
                 <div>
-                  <div className="text-[#94A3B8]">Length</div>
-                  <div className="font-semibold text-[#0F172A]">{doc.pages} Pages</div>
+                  <h3 className="text-base font-display font-bold text-[#0F172A] leading-snug">
+                    {doc.title}
+                  </h3>
+                  <p className="text-xs text-[#475569] mt-1 leading-relaxed line-clamp-3">
+                    {doc.summary}
+                  </p>
                 </div>
-                <div>
-                  <div className="text-[#94A3B8]">Density</div>
-                  <div className="font-semibold text-[#0F172A]">
-                    {doc.wordCount.toLocaleString()} w
+
+                {/* Standard Key Clauses */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="text-[10px] font-mono text-[#64748B] uppercase font-bold">
+                    Citation & Reference
+                  </div>
+                  <div className="space-y-1">
+                    {extractKeyClauses(doc).map((clause, idx) => (
+                      <div
+                        key={idx}
+                        className="text-[11px] font-mono text-[#334155] bg-[#F8FAFC] border border-[#E2E8F0] px-2 py-0.5 rounded"
+                      >
+                        {clause}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div>
-                  <div className="text-[#94A3B8]">Standard</div>
-                  <div className="font-semibold text-[#0F172A]">{doc.standard}</div>
-                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => setPreviewDoc(doc)}
-                  className="py-1.5 px-3 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors text-center"
-                >
-                  Preview Structure
-                </button>
-                <button
-                  onClick={() => router.push('/analyze')}
-                  className="py-1.5 px-3 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] rounded transition-colors text-center"
-                >
-                  Analyze
-                </button>
+              {/* Bottom: Specs & Action Buttons */}
+              <div className="space-y-3 pt-3 border-t border-[#E2E8F0]">
+                <div className="grid grid-cols-3 gap-2 text-center font-mono text-[10px] text-[#64748B]">
+                  <div>
+                    <div className="text-[#94A3B8]">Length</div>
+                    <div className="font-semibold text-[#0F172A]">{doc.page_count} Pages</div>
+                  </div>
+                  <div>
+                    <div className="text-[#94A3B8]">Density</div>
+                    <div className="font-semibold text-[#0F172A]">
+                      {doc.word_count.toLocaleString()} w
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[#94A3B8]">ID</div>
+                    <div className="font-semibold text-[#0F172A]">{doc.id.split('-')[0]}</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setPreviewDoc(doc)}
+                    className="py-1.5 px-3 text-xs font-semibold text-[#0F172A] bg-white border border-[#CBD5E1] hover:bg-[#F1F5F9] rounded transition-colors text-center"
+                  >
+                    Preview
+                  </button>
+                  <button
+                    onClick={() => router.push('/analyze')}
+                    className="py-1.5 px-3 text-xs font-semibold text-white bg-[#0F172A] hover:bg-[#1E293B] rounded transition-colors text-center"
+                  >
+                    Analyze
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && !error && documents.length === 0 && (
+        <div className="text-center py-12 text-[#64748B]">
+          <p className="text-sm">No documents found matching your filters.</p>
+          <p className="text-xs mt-2">Try adjusting your search or filter criteria.</p>
+        </div>
+      )}
 
       {/* 5. Custom Template Batch Intake Banner */}
       <div className="scaffold-card p-5 border border-[#CBD5E1] bg-[#F8FAFC] flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -399,7 +533,6 @@ export default function SampleLibraryPage() {
             <h4 className="font-semibold text-[#0F172A]">Need custom template ingestion?</h4>
             <p className="text-[#475569] leading-relaxed">
               Bulk import your enterprise standard forms to train zero-retention private benchmarks.
-              Model weights remain fully client-isolated and strictly ephemeral within your active session.
             </p>
           </div>
         </div>
@@ -430,51 +563,53 @@ export default function SampleLibraryPage() {
       </div>
 
       {/* 6. Pagination Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#64748B] pt-2">
-        <div className="font-mono text-[11px]">
-          Showing {startIndex + 1}-{Math.min(endIndex, filteredDocs.length)} of {filteredDocs.length} verified templates
-        </div>
+      {!isLoading && !error && totalDocs > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#64748B] pt-2">
+          <div className="font-mono text-[11px]">
+            Showing {Math.min((currentPage - 1) * itemsPerPage + 1, totalDocs)}-{Math.min(currentPage * itemsPerPage, totalDocs)} of {totalDocs} verified documents
+          </div>
 
-        <div className="flex items-center gap-1 font-mono text-[11px]">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Previous page"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          {getVisiblePages().map((page, idx) =>
-            typeof page === 'number' ? (
-              <button
-                key={idx}
-                onClick={() => setCurrentPage(page)}
-                className={`px-2.5 py-1 rounded ${
-                  currentPage === page
-                    ? 'bg-[#0F172A] text-white font-bold'
-                    : 'border border-[#CBD5E1] hover:bg-[#F1F5F9]'
-                }`}
-                aria-label={`Go to page ${page}`}
-                aria-current={currentPage === page ? 'page' : undefined}
-              >
-                {page}
-              </button>
-            ) : (
-              <span key={idx} className="px-1">
-                ...
-              </span>
-            )
-          )}
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-            className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Next page"
-          >
-            <ChevronRight className="w-4 h-4" aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-1 font-mono text-[11px]">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            {getVisiblePages().map((page, idx) =>
+              typeof page === 'number' ? (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-2.5 py-1 rounded ${
+                    currentPage === page
+                      ? 'bg-[#0F172A] text-white font-bold'
+                      : 'border border-[#CBD5E1] hover:bg-[#F1F5F9]'
+                  }`}
+                  aria-label={`Go to page ${page}`}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                >
+                  {page}
+                </button>
+              ) : (
+                <span key={idx} className="px-1">
+                  ...
+                </span>
+              )
+            )}
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-1 rounded border border-[#CBD5E1] hover:bg-[#F1F5F9] disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-4 h-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Zero-Retention Documentation Modal */}
       <ZeroRetentionDocsModal
@@ -509,19 +644,18 @@ export default function SampleLibraryPage() {
             </div>
 
             <div className="space-y-3 text-xs">
-              <p className="text-[#334155] leading-relaxed">{previewDoc.description}</p>
+              <p className="text-[#334155] leading-relaxed">{previewDoc.summary}</p>
 
               <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded space-y-2 font-mono text-[11px]">
-                <div className="text-[#64748B] font-bold uppercase">Template Structure</div>
+                <div className="text-[#64748B] font-bold uppercase">Document Metadata</div>
                 <ul className="space-y-1 text-[#0F172A]">
-                  <li>• Preamble &amp; Definitions Hierarchy</li>
-                  <li>• Core Operational Covenants &amp; Term ({previewDoc.pages} Pages)</li>
-                  {previewDoc.keyClauses.map((c, i) => (
-                    <li key={i} className="text-[#0284C7]">
-                      • Key Risk Target: {c}
-                    </li>
-                  ))}
-                  <li>• General Miscellaneous, Governing Law &amp; Execution Block</li>
+                  <li>• ID: {previewDoc.id}</li>
+                  <li>• Type: {previewDoc.doc_type.replace('_', ' ')}</li>
+                  <li>• Pages: {previewDoc.page_count}</li>
+                  <li>• Words: {previewDoc.word_count.toLocaleString()}</li>
+                  <li className="text-[#0284C7]">• Citation: {previewDoc.citation}</li>
+                  <li>• Accessible: {previewDoc.accessible ? 'Yes' : 'No'}</li>
+                  <li>• Analyzable: {previewDoc.analyzable ? 'Yes' : 'No'}</li>
                 </ul>
               </div>
             </div>

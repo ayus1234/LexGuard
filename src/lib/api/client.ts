@@ -3,6 +3,8 @@
  * Clean, decoupled interface for interacting with the FastAPI document intelligence backend.
  */
 
+import type { CorpusListResponse, CorpusStatsResponse } from '@/types';
+
 export interface PageExtraction {
   page_number: number;
   text: string;
@@ -703,6 +705,93 @@ export const apiClient = {
         window.URL.revokeObjectURL(url);
       }, 200);
     }, 0);
+  },
+
+  /**
+   * Retrieves corpus documents with pagination and filtering
+   */
+  async getCorpusDocuments(params: {
+    page?: number;
+    page_size?: number;
+    doc_type?: string | null;
+    category?: string | null;
+    jurisdiction?: string | null;
+    search?: string | null;
+  }): Promise<CorpusListResponse> {
+    const queryParams = new URLSearchParams();
+    if (params.page) queryParams.append('page', params.page.toString());
+    if (params.page_size) queryParams.append('page_size', params.page_size.toString());
+    if (params.doc_type) queryParams.append('doc_type', params.doc_type);
+    if (params.category) queryParams.append('category', params.category);
+    if (params.jurisdiction) queryParams.append('jurisdiction', params.jurisdiction);
+    if (params.search) queryParams.append('search', params.search);
+
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE_URL}/api/v1/corpus/documents?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    } catch (networkErr: any) {
+      throw new LexGuardApiClientError(
+        'Unable to connect to LexGuard corpus service.',
+        'NETWORK_ERROR',
+        0
+      );
+    }
+
+    if (!res.ok) {
+      let errorData: ApiErrorResponse | null = null;
+      try {
+        errorData = await res.json();
+      } catch {
+        // Non-JSON response
+      }
+
+      const message = errorData?.error?.message || `Corpus retrieval failed (${res.status})`;
+      const code = errorData?.error?.code || 'CORPUS_ERROR';
+      throw new LexGuardApiClientError(message, code, res.status);
+    }
+
+    return res.json();
+  },
+
+  /**
+   * Retrieves corpus statistics and available filter values
+   */
+  async getCorpusStats(): Promise<CorpusStatsResponse> {
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE_URL}/api/v1/corpus/stats`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    } catch (networkErr: any) {
+      throw new LexGuardApiClientError(
+        'Unable to connect to LexGuard corpus service.',
+        'NETWORK_ERROR',
+        0
+      );
+    }
+
+    if (!res.ok) {
+      let errorData: ApiErrorResponse | null = null;
+      try {
+        errorData = await res.json();
+      } catch {
+        // Non-JSON response
+      }
+
+      const message = errorData?.error?.message || `Corpus stats retrieval failed (${res.status})`;
+      const code = errorData?.error?.code || 'CORPUS_ERROR';
+      throw new LexGuardApiClientError(message, code, res.status);
+    }
+
+    return res.json();
   },
 };
 
