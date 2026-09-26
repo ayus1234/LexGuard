@@ -67,8 +67,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header className="bg-white border-b border-[#E2E8F0] sticky top-0 z-40">
-      <div className="max-w-[1680px] mx-auto px-4 sm:px-6">
-        <div className="h-14 flex items-center gap-2">
+      <div className="w-full px-4 sm:px-6">
+        <div className="h-14 flex items-center gap-4">
           {/* Left: Brand Logo */}
           <div className="flex items-center gap-3 shrink-0">
             {onToggleSidebar && (
@@ -116,24 +116,25 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </nav>
 
           {/* Right: Search, Actions, Profile */}
-          <div className="flex items-center gap-2 ml-auto shrink-0">
+          <div className="flex items-center gap-3 ml-auto shrink-0">
             {/* Quick Search */}
             <button
               onClick={onOpenCommandPalette}
-              className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-2.5 py-1 text-xs text-[#64748B] transition-colors w-44 lg:w-48 justify-between shrink-0"
+              className="hidden md:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded px-3 py-1.5 text-xs text-[#64748B] transition-colors w-auto justify-between shrink-0"
               aria-label="Search corpus"
+              style={{ minWidth: '240px', maxWidth: '300px' }}
             >
-              <span className="flex items-center gap-1.5 truncate min-w-0">
+              <span className="flex items-center gap-1.5 shrink-0">
                 <Search className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" aria-hidden="true" />
-                <span className="truncate">Search corpus, statutes...</span>
+                <span className="whitespace-nowrap">Search corpus, statutes...</span>
               </span>
-              <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.2 rounded shadow-2xs shrink-0">
+              <kbd className="font-mono text-[10px] bg-white border border-[#CBD5E1] text-[#64748B] px-1.5 py-0.5 rounded shadow-sm shrink-0 ml-2">
                 ⌘K
               </kbd>
             </button>
 
             {/* Status & Session Indicators */}
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#64748B] relative shrink-0">
+            <div className="hidden sm:flex items-center gap-2 text-xs text-[#64748B] relative shrink-0">
               {/* 1. Notification / Verifications Counter Control */}
               <div className="relative" ref={verificationsRef}>
               <button
@@ -320,7 +321,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             </div>
           </div>
 
-            <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block" />
+            <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block shrink-0" />
 
             {/* 3. User Profile / Active Session Control */}
             <div className="relative shrink-0" ref={profileRef}>
@@ -332,11 +333,11 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 }}
                 aria-expanded={isProfileOpen}
                 aria-label="Counsel Profile and Active Session Settings"
-                className="flex items-center gap-2 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
+                className="flex items-center gap-2.5 p-1 rounded hover:bg-[#F8FAFC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-1"
               >
                 <div className="text-right hidden sm:block shrink-0">
                   <div className="text-xs font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
-                    Lead Legal Counsel
+                    Lead Legal
                   </div>
                   <div className="text-[10px] font-mono text-[#059669] flex items-center justify-end gap-1 whitespace-nowrap">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse"></span>
@@ -377,7 +378,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#0F172A]">Lead Legal Counsel</div>
+                    <div className="text-xs font-bold text-[#0F172A]">Lead Legal</div>
                     <div className="text-[11px] font-mono text-[#64748B]">counsel@lexguard.internal</div>
                   </div>
                 </div>
