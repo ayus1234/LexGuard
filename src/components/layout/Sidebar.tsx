@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className="space-y-5">
           {/* Section: Inspection Hub */}
           <div>
-            <div className="text-xs font-mono font-bold tracking-wider text-[#64748B] uppercase px-2 mb-2">
+            <div className="text-[11px] font-mono font-bold tracking-wider text-[#64748B] uppercase px-2 mb-2">
               Inspection Hub
             </div>
             <nav aria-label="Inspection Hub Navigation" className="space-y-1">
@@ -102,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center justify-between px-2.5 py-2 rounded text-sm font-medium transition-colors ${
+                    className={`flex items-center justify-between px-2.5 py-2 rounded text-[13px] font-medium transition-colors ${
                       isActive
                         ? 'bg-[#0F172A] text-white shadow-xs font-semibold'
                         : 'text-[#334155] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
                     {item.badge && (
                       <span
-                        className={`text-xs font-mono px-1.5 py-0.5 rounded-full ${
+                        className={`text-[11px] font-mono px-1.5 py-0.5 rounded-full ${
                           isActive
                             ? 'bg-[#1E293B] text-sky-200'
                             : 'bg-[#EFF6FF] text-[#0284C7] border border-[#BFDBFE]'
@@ -142,19 +142,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           {/* Section: Verification Engine */}
           <div className="pt-3 border-t border-[#E2E8F0]">
-            <div className="text-xs font-mono font-bold tracking-wider text-[#64748B] uppercase px-2 mb-2">
+            <div className="text-[11px] font-mono font-bold tracking-wider text-[#64748B] uppercase px-2 mb-2">
               Verification Engine
             </div>
 
             <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded p-2.5 space-y-2">
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-[13px]">
                 <span className="font-semibold text-[#1E293B]">Corpus Integrity</span>
                 <span className="font-mono font-bold text-[#0284C7]">100%</span>
               </div>
               <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden" role="progressbar" aria-valuenow={100} aria-valuemin={0} aria-valuemax={100} aria-label="Corpus integrity 100%">
                 <div className="bg-[#0284C7] h-full w-full rounded-full"></div>
               </div>
-              <p className="text-xs text-[#64748B] leading-tight">
+              <p className="text-[11px] text-[#64748B] leading-tight">
                 Federal & State codified standards synchronized
               </p>
             </div>
@@ -162,11 +162,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           {/* Section: Active Session Guard */}
           <div className="pt-3 border-t border-[#E2E8F0] space-y-2">
-            <div className="text-xs font-mono font-bold tracking-wider text-[#64748B] uppercase px-2">
+            <div className="text-[11px] font-mono font-bold tracking-wider text-[#64748B] uppercase px-2">
               Active Session Guard
             </div>
 
-            <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded p-2.5 space-y-1.5 text-xs font-mono">
+            <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded p-2.5 space-y-1.5 text-[11px] font-mono">
               <div className="flex items-center justify-between">
                 <span className="text-[#64748B]">Zero-Retention:</span>
                 <span className="text-[#059669] font-bold flex items-center gap-1">
